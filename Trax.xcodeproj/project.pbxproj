@@ -18,6 +18,7 @@
 		EC30AB371CF66DB800394C33 /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC30AB361CF66DB800394C33 /* ImageViewController.swift */; };
 		EC30AB391CF671F700394C33 /* EditWaypointViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC30AB381CF671F700394C33 /* EditWaypointViewController.swift */; };
 		F582C8641DE674FF00100339 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F582C8631DE674FF00100339 /* MapKit.framework */; };
+		F5D908CF1DE917F800C576A5 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D908CE1DE917F800C576A5 /* SWRevealViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,9 @@
 		EC30AB361CF66DB800394C33 /* ImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
 		EC30AB381CF671F700394C33 /* EditWaypointViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditWaypointViewController.swift; sourceTree = "<group>"; };
 		F582C8631DE674FF00100339 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		F5D908CC1DE917F700C576A5 /* Trax-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Trax-Bridging-Header.h"; sourceTree = "<group>"; };
+		F5D908CD1DE917F800C576A5 /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
+		F5D908CE1DE917F800C576A5 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +76,7 @@
 		EC106B151CF3D806001F59D6 = {
 			isa = PBXGroup;
 			children = (
+				F5D908D01DE9180000C576A5 /* SWRevealViewController */,
 				EC106B201CF3D806001F59D6 /* Trax */,
 				EC106B1F1CF3D806001F59D6 /* Products */,
 				929D73C213DFDEA713899E17 /* Pods */,
@@ -110,6 +115,16 @@
 				EC106B2D1CF3D806001F59D6 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F5D908D01DE9180000C576A5 /* SWRevealViewController */ = {
+			isa = PBXGroup;
+			children = (
+				F5D908CC1DE917F700C576A5 /* Trax-Bridging-Header.h */,
+				F5D908CD1DE917F800C576A5 /* SWRevealViewController.h */,
+				F5D908CE1DE917F800C576A5 /* SWRevealViewController.m */,
+			);
+			name = SWRevealViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -241,6 +256,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5D908CF1DE917F800C576A5 /* SWRevealViewController.m in Sources */,
 				EC106B241CF3D806001F59D6 /* GPXViewController.swift in Sources */,
 				EC106B371CF3DA46001F59D6 /* MKGPX.swift in Sources */,
 				EC30AB391CF671F700394C33 /* EditWaypointViewController.swift in Sources */,
@@ -367,6 +383,7 @@
 			baseConfigurationReference = 334860E5E83BDD32219D9C40 /* Pods-Trax.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = PE9VXC3HPB;
 				INFOPLIST_FILE = Trax/Info.plist;
@@ -374,6 +391,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.drtomasino.Trax;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Trax-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -383,6 +402,7 @@
 			baseConfigurationReference = 3C243E2F170E68F72F4338E4 /* Pods-Trax.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = PE9VXC3HPB;
 				INFOPLIST_FILE = Trax/Info.plist;
@@ -390,6 +410,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.drtomasino.Trax;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Trax-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

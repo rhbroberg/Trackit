@@ -14,6 +14,8 @@ class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
 {
     // MARK: Public Model
 
+    @IBOutlet weak var menuButton: UIBarButtonItem!
+    
     var gpxURL: URL? {
         didSet {
             clearWaypoints()
@@ -48,6 +50,13 @@ class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
     override func viewDidLoad() {
         super.viewDidLoad()
         // gpxURL = URL(string: "http://cs193p.stanford.edu/Vacation.gpx")
+
+        if self.revealViewController() != nil {
+            menuButton.target = self.revealViewController()
+            menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
+            self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+            self.revealViewController().rearViewRevealWidth = 130
+        }
         connect()
     }
 
