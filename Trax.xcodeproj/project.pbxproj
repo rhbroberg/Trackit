@@ -19,6 +19,8 @@
 		EC30AB391CF671F700394C33 /* EditWaypointViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC30AB381CF671F700394C33 /* EditWaypointViewController.swift */; };
 		F582C8641DE674FF00100339 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F582C8631DE674FF00100339 /* MapKit.framework */; };
 		F5D908CF1DE917F800C576A5 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D908CE1DE917F800C576A5 /* SWRevealViewController.m */; };
+		F5D908D31DEA1C2300C576A5 /* ConnectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D908D21DEA1C2300C576A5 /* ConnectionTableViewController.swift */; };
+		F5D908D51DEA21F500C576A5 /* AccountTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D908D41DEA21F500C576A5 /* AccountTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +42,8 @@
 		F5D908CC1DE917F700C576A5 /* Trax-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Trax-Bridging-Header.h"; sourceTree = "<group>"; };
 		F5D908CD1DE917F800C576A5 /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
 		F5D908CE1DE917F800C576A5 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
+		F5D908D21DEA1C2300C576A5 /* ConnectionTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionTableViewController.swift; sourceTree = "<group>"; };
+		F5D908D41DEA21F500C576A5 /* AccountTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +80,7 @@
 		EC106B151CF3D806001F59D6 = {
 			isa = PBXGroup;
 			children = (
+				F5D908D11DEA1BEB00C576A5 /* Settings */,
 				F5D908D01DE9180000C576A5 /* SWRevealViewController */,
 				EC106B201CF3D806001F59D6 /* Trax */,
 				EC106B1F1CF3D806001F59D6 /* Products */,
@@ -125,6 +130,15 @@
 				F5D908CE1DE917F800C576A5 /* SWRevealViewController.m */,
 			);
 			name = SWRevealViewController;
+			sourceTree = "<group>";
+		};
+		F5D908D11DEA1BEB00C576A5 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				F5D908D21DEA1C2300C576A5 /* ConnectionTableViewController.swift */,
+				F5D908D41DEA21F500C576A5 /* AccountTableViewController.swift */,
+			);
+			name = Settings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -261,8 +275,10 @@
 				EC106B371CF3DA46001F59D6 /* MKGPX.swift in Sources */,
 				EC30AB391CF671F700394C33 /* EditWaypointViewController.swift in Sources */,
 				EC30AB371CF66DB800394C33 /* ImageViewController.swift in Sources */,
+				F5D908D31DEA1C2300C576A5 /* ConnectionTableViewController.swift in Sources */,
 				EC106B221CF3D806001F59D6 /* AppDelegate.swift in Sources */,
 				EC106B351CF3D933001F59D6 /* GPX.swift in Sources */,
+				F5D908D51DEA21F500C576A5 /* AccountTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -51,12 +51,7 @@ class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
         super.viewDidLoad()
         // gpxURL = URL(string: "http://cs193p.stanford.edu/Vacation.gpx")
 
-        if self.revealViewController() != nil {
-            menuButton.target = self.revealViewController()
-            menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
-            self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-            self.revealViewController().rearViewRevealWidth = 130
-        }
+        registerReveal(menuButton: menuButton)
         connect()
     }
 
@@ -295,6 +290,8 @@ class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
      }
 }
 
+// MARK: 
+
 extension GPXViewController: CocoaMQTTDelegate {
     
     func mqtt(_ mqtt: CocoaMQTT, didConnect host: String, port: Int) {
@@ -359,6 +356,15 @@ extension UIViewController {
             return navcon.visibleViewController ?? navcon
         } else {
             return self
+        }
+    }
+    
+    func registerReveal(menuButton: UIBarButtonItem) {
+        if self.revealViewController() != nil {
+            menuButton.target = self.revealViewController()
+            menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
+            self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+            self.revealViewController().rearViewRevealWidth = 130
         }
     }
 }
