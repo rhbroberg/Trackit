@@ -261,7 +261,7 @@ class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
         }
     }
 
-    func addRoute(latitude : String, longitude : String) {
+    func addToRoute(latitude : String, longitude : String) {
         let p = CGPointFromString("{\(latitude),\(longitude)}")
         if (pointsToUse.count == 0) {
             addWaypoint(coordinate: CLLocationCoordinate2D(latitude: CLLocationDegrees(p.x), longitude: CLLocationDegrees(p.y)), name: "Starting Point")
@@ -310,7 +310,7 @@ extension GPXViewController: CocoaMQTTDelegate {
     
     func mqtt(_ mqtt: CocoaMQTT, didReceiveMessage message: CocoaMQTTMessage, id: UInt16 ) {
         var gpsArray = message.string!.characters.split { $0 == ";" }.map(String.init)
-        addRoute(latitude: gpsArray[0], longitude: gpsArray[1])
+        addToRoute(latitude: gpsArray[0], longitude: gpsArray[1])
 
         let name = Notification.Name(rawValue: "MQTTMessageNotification")
         NotificationCenter.default.post(name: name, object: self, userInfo: ["message": message.string!, "topic": message.topic])
