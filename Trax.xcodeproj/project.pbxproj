@@ -80,8 +80,6 @@
 		EC106B151CF3D806001F59D6 = {
 			isa = PBXGroup;
 			children = (
-				F5D908D11DEA1BEB00C576A5 /* Settings */,
-				F5D908D01DE9180000C576A5 /* SWRevealViewController */,
 				EC106B201CF3D806001F59D6 /* Trax */,
 				EC106B1F1CF3D806001F59D6 /* Products */,
 				929D73C213DFDEA713899E17 /* Pods */,
@@ -100,6 +98,8 @@
 		EC106B201CF3D806001F59D6 /* Trax */ = {
 			isa = PBXGroup;
 			children = (
+				F5D908D11DEA1BEB00C576A5 /* Settings */,
+				F5D908D01DE9180000C576A5 /* SWRevealViewController */,
 				EC106B251CF3D806001F59D6 /* Main.storyboard */,
 				EC106B231CF3D806001F59D6 /* GPXViewController.swift */,
 				EC30AB381CF671F700394C33 /* EditWaypointViewController.swift */,
@@ -130,6 +130,7 @@
 				F5D908CE1DE917F800C576A5 /* SWRevealViewController.m */,
 			);
 			name = SWRevealViewController;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		F5D908D11DEA1BEB00C576A5 /* Settings */ = {
@@ -139,6 +140,7 @@
 				F5D908D41DEA21F500C576A5 /* AccountTableViewController.swift */,
 			);
 			name = Settings;
+			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
