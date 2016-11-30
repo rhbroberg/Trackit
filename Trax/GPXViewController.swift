@@ -9,6 +9,7 @@
 import UIKit
 import MapKit
 import CocoaMQTT
+import CoreData
 
 class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentationControllerDelegate
 {
@@ -288,6 +289,37 @@ class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
         }
         lastReceived = Date()
      }
+    
+    var coreDataContainer : NSManagedObjectContext? =
+        (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
+    func updateLocationDb(message: CocoaMQTTMessage)
+    {
+        // latitude, longitude, altitude, course, speed, char, satellites, strength
+        var messageParts = message.string!.characters.split { $0 == ";" }.map(String.init)
+
+        coreDataContainer?.perform {
+            do {
+                if let location = NSEntityDescription.insertNewObject(forEntityName: "Location", into: self.coreDataContainer!) as? Location
+                {
+                    location.latitude = Float(messageParts[0])!
+                    location.longitude = Float(messageParts[1])!
+                    location.altitude = Float(messageParts[2])!
+                    location.course = Float(messageParts[3])!
+                    location.speed = Float(messageParts[4])!
+                    location.satellites = Int64(messageParts[6])!
+                    location.signal = Int64(messageParts[7])!
+                }
+                try self.coreDataContainer?.save()
+            }
+            catch let error {
+                print("Core data error: \(error)")
+            }
+            
+        }
+    }
+
+    
 }
 
 // MARK: 
@@ -317,7 +349,7 @@ extension GPXViewController: CocoaMQTTDelegate {
     func mqtt(_ mqtt: CocoaMQTT, didReceiveMessage message: CocoaMQTTMessage, id: UInt16 ) {
         var gpsArray = message.string!.characters.split { $0 == ";" }.map(String.init)
         addToRoute(latitude: gpsArray[0], longitude: gpsArray[1])
-
+        updateLocationDb(message: message)
         let name = Notification.Name(rawValue: "MQTTMessageNotification")
         NotificationCenter.default.post(name: name, object: self, userInfo: ["message": message.string!, "topic": message.topic])
     }

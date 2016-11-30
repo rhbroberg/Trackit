@@ -21,6 +21,13 @@
 		F5D908CF1DE917F800C576A5 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D908CE1DE917F800C576A5 /* SWRevealViewController.m */; };
 		F5D908D31DEA1C2300C576A5 /* ConnectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D908D21DEA1C2300C576A5 /* ConnectionTableViewController.swift */; };
 		F5D908D51DEA21F500C576A5 /* AccountTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D908D41DEA21F500C576A5 /* AccountTableViewController.swift */; };
+		F5D909151DED0D7600C576A5 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F5D909131DED0D7600C576A5 /* Model.xcdatamodeld */; };
+		F5FA906D1DED17B500AA4E02 /* Route+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5FA90671DED17B500AA4E02 /* Route+CoreDataClass.swift */; };
+		F5FA906E1DED17B500AA4E02 /* Route+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5FA90681DED17B500AA4E02 /* Route+CoreDataProperties.swift */; };
+		F5FA906F1DED17B500AA4E02 /* Device+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5FA90691DED17B500AA4E02 /* Device+CoreDataClass.swift */; };
+		F5FA90701DED17B500AA4E02 /* Device+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5FA906A1DED17B500AA4E02 /* Device+CoreDataProperties.swift */; };
+		F5FA90711DED17B500AA4E02 /* Location+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5FA906B1DED17B500AA4E02 /* Location+CoreDataClass.swift */; };
+		F5FA90721DED17B500AA4E02 /* Location+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5FA906C1DED17B500AA4E02 /* Location+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +51,13 @@
 		F5D908CE1DE917F800C576A5 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
 		F5D908D21DEA1C2300C576A5 /* ConnectionTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionTableViewController.swift; sourceTree = "<group>"; };
 		F5D908D41DEA21F500C576A5 /* AccountTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountTableViewController.swift; sourceTree = "<group>"; };
+		F5D909141DED0D7600C576A5 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		F5FA90671DED17B500AA4E02 /* Route+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Route+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F5FA90681DED17B500AA4E02 /* Route+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Route+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		F5FA90691DED17B500AA4E02 /* Device+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Device+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F5FA906A1DED17B500AA4E02 /* Device+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Device+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		F5FA906B1DED17B500AA4E02 /* Location+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Location+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F5FA906C1DED17B500AA4E02 /* Location+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Location+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +112,7 @@
 		EC106B201CF3D806001F59D6 /* Trax */ = {
 			isa = PBXGroup;
 			children = (
+				F5800DEA1DED15DA00B41812 /* Core Data */,
 				F5D908D11DEA1BEB00C576A5 /* Settings */,
 				F5D908D01DE9180000C576A5 /* SWRevealViewController */,
 				EC106B251CF3D806001F59D6 /* Main.storyboard */,
@@ -120,6 +135,20 @@
 				EC106B2D1CF3D806001F59D6 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F5800DEA1DED15DA00B41812 /* Core Data */ = {
+			isa = PBXGroup;
+			children = (
+				F5D909131DED0D7600C576A5 /* Model.xcdatamodeld */,
+				F5FA90671DED17B500AA4E02 /* Route+CoreDataClass.swift */,
+				F5FA90681DED17B500AA4E02 /* Route+CoreDataProperties.swift */,
+				F5FA90691DED17B500AA4E02 /* Device+CoreDataClass.swift */,
+				F5FA906A1DED17B500AA4E02 /* Device+CoreDataProperties.swift */,
+				F5FA906B1DED17B500AA4E02 /* Location+CoreDataClass.swift */,
+				F5FA906C1DED17B500AA4E02 /* Location+CoreDataProperties.swift */,
+			);
+			name = "Core Data";
 			sourceTree = "<group>";
 		};
 		F5D908D01DE9180000C576A5 /* SWRevealViewController */ = {
@@ -272,13 +301,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5FA90721DED17B500AA4E02 /* Location+CoreDataProperties.swift in Sources */,
 				F5D908CF1DE917F800C576A5 /* SWRevealViewController.m in Sources */,
 				EC106B241CF3D806001F59D6 /* GPXViewController.swift in Sources */,
 				EC106B371CF3DA46001F59D6 /* MKGPX.swift in Sources */,
+				F5FA90711DED17B500AA4E02 /* Location+CoreDataClass.swift in Sources */,
 				EC30AB391CF671F700394C33 /* EditWaypointViewController.swift in Sources */,
+				F5FA906D1DED17B500AA4E02 /* Route+CoreDataClass.swift in Sources */,
+				F5FA906F1DED17B500AA4E02 /* Device+CoreDataClass.swift in Sources */,
 				EC30AB371CF66DB800394C33 /* ImageViewController.swift in Sources */,
 				F5D908D31DEA1C2300C576A5 /* ConnectionTableViewController.swift in Sources */,
+				F5FA906E1DED17B500AA4E02 /* Route+CoreDataProperties.swift in Sources */,
 				EC106B221CF3D806001F59D6 /* AppDelegate.swift in Sources */,
+				F5D909151DED0D7600C576A5 /* Model.xcdatamodeld in Sources */,
+				F5FA90701DED17B500AA4E02 /* Device+CoreDataProperties.swift in Sources */,
 				EC106B351CF3D933001F59D6 /* GPX.swift in Sources */,
 				F5D908D51DEA21F500C576A5 /* AccountTableViewController.swift in Sources */,
 			);
@@ -400,6 +436,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 334860E5E83BDD32219D9C40 /* Pods-Trax.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -419,6 +456,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3C243E2F170E68F72F4338E4 /* Pods-Trax.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -455,6 +493,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		F5D909131DED0D7600C576A5 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				F5D909141DED0D7600C576A5 /* Model.xcdatamodel */,
+			);
+			currentVersion = F5D909141DED0D7600C576A5 /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = EC106B161CF3D806001F59D6 /* Project object */;
 }
