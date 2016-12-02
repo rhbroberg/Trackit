@@ -2,7 +2,7 @@
 //  Route+CoreDataProperties.swift
 //  Trax
 //
-//  Created by Richard Broberg on 11/29/16.
+//  Created by Richard Broberg on 12/1/16.
 //  Copyright © 2016 Stanford University. All rights reserved.
 //
 

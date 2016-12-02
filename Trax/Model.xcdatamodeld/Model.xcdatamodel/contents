@@ -8,6 +8,7 @@
     <entity name="Location" representedClassName="Location" syncable="YES">
         <attribute name="altitude" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="course" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="satellites" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -27,7 +28,7 @@
     </entity>
     <elements>
         <element name="Device" positionX="-128" positionY="378" width="128" height="90"/>
-        <element name="Location" positionX="90" positionY="361" width="146" height="224"/>
+        <element name="Location" positionX="90" positionY="361" width="146" height="236"/>
         <element name="Route" positionX="360" positionY="486" width="128" height="90"/>
     </elements>
 </model>

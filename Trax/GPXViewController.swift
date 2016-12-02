@@ -50,9 +50,8 @@ class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // gpxURL = URL(string: "http://cs193p.stanford.edu/Vacation.gpx")
-
         registerReveal(menuButton: menuButton)
+        initializeVisibleRoutes(routes: ["frist"])
         connect()
     }
 
@@ -69,6 +68,30 @@ class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
         didSet {
             mapView.mapType = .standard // .satellite
             mapView.delegate = self
+        }
+    }
+    
+    func initializeVisibleRoutes(routes: [String]) {
+        for route in routes {
+            coreDataContainer?.perform {
+                print("loading route \(route)")
+                let request = NSFetchRequest<Location>(entityName: "Location")
+                let sortDescriptor = NSSortDescriptor(key: "id", ascending: true)
+                request.sortDescriptors = [sortDescriptor]
+                //            request.predicate = NSPredicate(format: "route = %@", route);
+                
+                if let results = try? self.coreDataContainer!.fetch(request) {
+                    print("i see \(results.count) locations")
+                    for location in results as [NSManagedObject] {
+                        let latitude: Float = location.value(forKey: "latitude")! as! Float
+                        let longitude: Float = location.value(forKey: "longitude")! as! Float
+                        self.addToRoute(latitude: String(format: "%.9f", latitude), longitude: String(format: "%.9f",longitude))
+                    }
+                }
+                DispatchQueue.main.async {
+                    self.registerOverlay(isInitial: false)
+                }
+            }
         }
     }
     
@@ -249,7 +272,20 @@ class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
     var lastReceived = Date()
     var myPolyline = MKPolyline()
 
-    func registerOverlay() {
+    func dataIsStable() {
+        registerOverlay(isInitial: true)
+        coreDataContainer?.perform {
+            do {
+                print("saving data now")
+                try self.coreDataContainer?.save()
+            }
+            catch let error {
+                print("Core data error: \(error)")
+            }
+        }
+    }
+    
+    func registerOverlay(isInitial: Bool) {
         // delete old one first
         if (myPolyline.pointCount > 0) {
             mapView.remove(myPolyline)
@@ -262,67 +298,62 @@ class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
         // http://stackoverflow.com/questions/13569327/zoom-mkmapview-to-fit-polyline-points
         if let first = mapView.overlays.first {
             let rect = mapView.overlays.reduce(first.boundingMapRect, {MKMapRectUnion($0, $1.boundingMapRect)})
-            mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top: 50.0, left: 50.0, bottom: 50.0, right: 50.0), animated: true)
+            mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top: 50.0, left: 50.0, bottom: 50.0, right: 50.0), animated: isInitial)
         }
     }
 
     func addToRoute(latitude : String, longitude : String) {
         let p = CGPointFromString("{\(latitude),\(longitude)}")
+//        print("adding \(latitude), \(longitude)")
         if (pointsToUse.count == 0) {
             addWaypoint(coordinate: CLLocationCoordinate2D(latitude: CLLocationDegrees(p.x), longitude: CLLocationDegrees(p.y)), name: "Starting Point")
         }
         pointsToUse += [CLLocationCoordinate2DMake(CLLocationDegrees(p.x), CLLocationDegrees(p.y))]
-
-        if (addOverlayTimer.isValid) {
-            addOverlayTimer.invalidate()
-        }
-
-        if (lastReceived.timeIntervalSinceNow < -1) {
-            print("rendering immediately")
-            registerOverlay()
-        }
-        else {
-            print("datastream coming in too fast; delaying render")
-            addOverlayTimer = Timer.scheduledTimer(timeInterval: 1.0, target:self,
-                                                   selector: #selector(GPXViewController.registerOverlay),
-                                                   userInfo: nil, repeats: false)
-        }
-        lastReceived = Date()
      }
-    
+
     var coreDataContainer : NSManagedObjectContext? =
         (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
-    func updateLocationDb(message: CocoaMQTTMessage)
+    var maxLocationId : Int?
+
+    func addLocationToDb(message: CocoaMQTTMessage)
     {
         // latitude, longitude, altitude, course, speed, char, satellites, strength
         var messageParts = message.string!.characters.split { $0 == ";" }.map(String.init)
 
         coreDataContainer?.perform {
-            do {
-                if let location = NSEntityDescription.insertNewObject(forEntityName: "Location", into: self.coreDataContainer!) as? Location
-                {
-                    location.latitude = Float(messageParts[0])!
-                    location.longitude = Float(messageParts[1])!
-                    location.altitude = Float(messageParts[2])!
-                    location.course = Float(messageParts[3])!
-                    location.speed = Float(messageParts[4])!
-                    location.satellites = Int64(messageParts[6])!
-                    location.signal = Int64(messageParts[7])!
+            if self.maxLocationId == nil {
+                self.maxLocationId = 0
+                let request = NSFetchRequest<Location>(entityName: "Location")
+                request.predicate = NSPredicate(format: "id==max(id)")
+
+                if let results = try? self.coreDataContainer!.fetch(request) {
+                    for location in results as [NSManagedObject] {
+                        let mymax = location.value(forKey: "id")! as! Int
+                        print("db max id is \(mymax)")
+                        self.maxLocationId = mymax
+                    }
                 }
-                try self.coreDataContainer?.save()
-            }
-            catch let error {
-                print("Core data error: \(error)")
             }
             
+            if let location = NSEntityDescription.insertNewObject(forEntityName: "Location", into: self.coreDataContainer!) as? Location
+            {
+                location.latitude = Float(messageParts[0])!
+                location.longitude = Float(messageParts[1])!
+                location.altitude = Float(messageParts[2])!
+                location.course = Float(messageParts[3])!
+                location.speed = Float(messageParts[4])!
+                location.satellites = Int64(messageParts[6])!
+                location.signal = Int64(messageParts[7])!
+                location.timestamp = NSDate.init()  // fake it until datastream has timestamp in it
+                location.id = Int64(self.maxLocationId!)
+                self.maxLocationId! += 1
+            }
         }
     }
-
-    
 }
 
-// MARK: 
+// MARK:
 
 extension GPXViewController: CocoaMQTTDelegate {
     
@@ -349,7 +380,24 @@ extension GPXViewController: CocoaMQTTDelegate {
     func mqtt(_ mqtt: CocoaMQTT, didReceiveMessage message: CocoaMQTTMessage, id: UInt16 ) {
         var gpsArray = message.string!.characters.split { $0 == ";" }.map(String.init)
         addToRoute(latitude: gpsArray[0], longitude: gpsArray[1])
-        updateLocationDb(message: message)
+        addLocationToDb(message: message)
+
+        if (addOverlayTimer.isValid) {
+            addOverlayTimer.invalidate()
+        }
+
+        if (lastReceived.timeIntervalSinceNow < -1) {
+            print("rendering immediately")
+            dataIsStable()
+        }
+        else {
+            print("datastream coming in too fast; delaying render")
+            addOverlayTimer = Timer.scheduledTimer(timeInterval: 1.0, target:self,
+                                                   selector: #selector(GPXViewController.dataIsStable),
+                                                   userInfo: nil, repeats: false)
+        }
+        lastReceived = Date()
+        
         let name = Notification.Name(rawValue: "MQTTMessageNotification")
         NotificationCenter.default.post(name: name, object: self, userInfo: ["message": message.string!, "topic": message.topic])
     }
