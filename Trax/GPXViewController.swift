@@ -34,7 +34,7 @@ class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
     
     func configureMQTTServer() {
         let clientID = "ios-app-" + UIDevice.current.identifierForVendor!.uuidString
-        mqtt = CocoaMQTT(clientID: clientID, host: "gw.onthegrid.net", port: 1883)
+        mqtt = CocoaMQTT(clientID: clientID, host: "ec2-54-175-5-136.compute-1.amazonaws.com", port: 1883)
         //        mqtt!.secureMQTT = true
         if let mqtt = mqtt {
             mqtt.username = "rhb"
@@ -304,7 +304,6 @@ class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
 
     func addToRoute(latitude : String, longitude : String) {
         let p = CGPointFromString("{\(latitude),\(longitude)}")
-//        print("adding \(latitude), \(longitude)")
         if (pointsToUse.count == 0) {
             addWaypoint(coordinate: CLLocationCoordinate2D(latitude: CLLocationDegrees(p.x), longitude: CLLocationDegrees(p.y)), name: "Starting Point")
         }
