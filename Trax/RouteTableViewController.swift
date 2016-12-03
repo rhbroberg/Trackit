@@ -9,7 +9,7 @@
 import UIKit
 
 class RouteTableViewController: UITableViewController {
-
+    
     @IBOutlet weak var menuButton: UIBarButtonItem!
     
     override func viewDidLoad() {
