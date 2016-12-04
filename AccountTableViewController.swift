@@ -1,6 +1,6 @@
 //
 //  AccountTableViewController.swift
-//  Trax
+//  Trackit
 //
 //  Created by Richard Broberg on 11/26/16.
 //  Copyright © 2016 Stanford University. All rights reserved.

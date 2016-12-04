@@ -1,15 +1,15 @@
 //
-//  ConnectionTableViewController.swift
+//  RouteTableViewController.swift
 //  Trackit
 //
-//  Created by Richard Broberg on 11/26/16.
+//  Created by Richard Broberg on 12/2/16.
 //  Copyright © 2016 Stanford University. All rights reserved.
 //
 
 import UIKit
 
-class ConnectionTableViewController: UITableViewController {
-
+class RouteTableViewController: UITableViewController {
+    
     @IBOutlet weak var menuButton: UIBarButtonItem!
     
     override func viewDidLoad() {
@@ -28,7 +28,5 @@ class ConnectionTableViewController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-    // MARK: - Table view data source
 
 }
