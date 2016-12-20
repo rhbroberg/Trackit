@@ -26,22 +26,27 @@ class RouteTableViewController: UITableViewController
                 route.name = newRouteName
                 route.startDate = NSDate.init()
                 route.isVisible = true
-
-                do {
-                    print("saving data now")
-                    try self.coreDataContainer?.save()
-                }
-                catch let error {
-                    print("Core data error: \(error)")
-                }
+                self.saveContext()
             }
         }
         getAllRoutes()
     }
 
-    var routes = [String]() {
+    func saveContext() {
+        if (coreDataContainer?.hasChanges)! {
+            do {
+                print("saving data now")
+                try coreDataContainer?.save()
+            }
+        
+            catch let error {
+                print("Core data error: \(error)")
+            }
+        }
+    }
+
+    var routes = [Route]() {
         didSet {
-        //    tableView.reloadData()
         }
     }
 
@@ -65,16 +70,15 @@ class RouteTableViewController: UITableViewController
         coreDataContainer?.perform {
             self.routes = []
             print("loading routes")
-            let request = NSFetchRequest<Route>(entityName: "Route")
+            let request: NSFetchRequest<Route> = Route.fetchRequest()
             let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
             request.sortDescriptors = [sortDescriptor]
 
-            if let results = try? self.coreDataContainer!.fetch(request) {
-                print("i see \(results.count) routes")
-                for route in results as [NSManagedObject] {
-                    let name: String = route.value(forKey: "name")! as! String
-                    self.routes.append(name)
-                }
+            do {
+                self.routes = try self.coreDataContainer!.fetch(request)
+                print("i see \(self.routes.count) routes")
+            } catch {
+                print("fetch failed, bummer")
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
@@ -93,16 +97,21 @@ class RouteTableViewController: UITableViewController
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RouteCell", for: indexPath)
-        
-        if let hackCell = cell as? RouteTableViewCell {
-            hackCell.entries.text = "42"
-            hackCell.isVisible.isOn = true
-            hackCell.name?.text = routes[indexPath.row]
+
+        if let cell = cell as? RouteTableViewCell {
+            let route = routes[indexPath.row]
+            cell.entries.text = "\(route.locations!.count)"
+            cell.name?.text = route.name!
+            cell.isVisible.isOn = route.isVisible
+            let dateFormat = DateFormatter()
+            dateFormat.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            dateFormat.timeZone = TimeZone.autoupdatingCurrent
+            cell.created?.text = dateFormat.string(for: route.startDate!)
         }
 
         return cell
     }
-    
+
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return "Section \(section)"
     }
@@ -110,10 +119,11 @@ class RouteTableViewController: UITableViewController
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCellEditingStyle.delete {
             print("deleting \(indexPath.row)")
-            routes.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
+            let route = routes[indexPath.row]
             coreDataContainer?.perform {
-//                set request =
+                self.coreDataContainer!.delete(route)
+                self.routes.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
             }
         }
     }
