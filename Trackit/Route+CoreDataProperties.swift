@@ -2,8 +2,8 @@
 //  Route+CoreDataProperties.swift
 //  Trackit
 //
-//  Created by Richard Broberg on 12/1/16.
-//  Copyright © 2016 Stanford University. All rights reserved.
+//  Created by Richard Broberg on 12/4/16.
+//  Copyright © 2016 Brobasino. All rights reserved.
 //
 
 import Foundation
@@ -16,8 +16,9 @@ extension Route {
         return NSFetchRequest<Route>(entityName: "Route");
     }
 
-    @NSManaged public var id: Int32
     @NSManaged public var name: String?
+    @NSManaged public var startDate: NSDate?
+    @NSManaged public var isVisible: Bool
     @NSManaged public var locations: NSSet?
 
 }

@@ -2,8 +2,8 @@
 //  Location+CoreDataProperties.swift
 //  Trackit
 //
-//  Created by Richard Broberg on 12/1/16.
-//  Copyright © 2016 Stanford University. All rights reserved.
+//  Created by Richard Broberg on 12/4/16.
+//  Copyright © 2016 Brobasino. All rights reserved.
 //
 
 import Foundation
@@ -18,13 +18,13 @@ extension Location {
 
     @NSManaged public var altitude: Float
     @NSManaged public var course: Float
+    @NSManaged public var id: Int64
     @NSManaged public var latitude: Float
     @NSManaged public var longitude: Float
     @NSManaged public var satellites: Int64
     @NSManaged public var signal: Int64
     @NSManaged public var speed: Float
     @NSManaged public var timestamp: NSDate?
-    @NSManaged public var id: Int64
     @NSManaged public var device: Device?
     @NSManaged public var route: Route?
 

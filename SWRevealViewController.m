@@ -425,6 +425,10 @@ static CGFloat scaledValue( CGFloat v1, CGFloat min2, CGFloat max2, CGFloat min1
     return UIModalPresentationNone;  // not applicable
 }
 
+- (void)pauseInteractiveTransition
+{
+    // not implemented
+}
 
 - (void)updateInteractiveTransition:(CGFloat)percentComplete
 {
@@ -762,7 +766,7 @@ const int FrontViewPositionNone = 0xff;
 }
 
 
-- (NSUInteger)supportedInterfaceOrientations
+- (enum UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
     // we could have simply not implemented this, but we choose to call super to make explicit that we
     // want the default behavior.
@@ -1716,7 +1720,6 @@ const int FrontViewPositionNone = 0xff;
     }
 }
 
-
 #pragma mark state preservation / restoration
 
 + (UIViewController *)viewControllerWithRestorationIdentifierPath:(NSArray *)identifierComponents coder:(NSCoder*)coder
@@ -1932,5 +1935,3 @@ NSString * const SWSegueRightIdentifier = @"sw_right";
 //}
 //
 //@end
-
-

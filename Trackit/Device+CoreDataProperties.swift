@@ -2,8 +2,8 @@
 //  Device+CoreDataProperties.swift
 //  Trackit
 //
-//  Created by Richard Broberg on 12/1/16.
-//  Copyright © 2016 Stanford University. All rights reserved.
+//  Created by Richard Broberg on 12/4/16.
+//  Copyright © 2016 Brobasino. All rights reserved.
 //
 
 import Foundation

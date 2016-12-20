@@ -22,6 +22,7 @@
         </fetchedProperty>
     </entity>
     <entity name="Route" representedClassName="Route" syncable="YES">
+        <attribute name="isVisible" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Location" inverseName="route" inverseEntity="Location" syncable="YES"/>
@@ -29,6 +30,6 @@
     <elements>
         <element name="Device" positionX="-128" positionY="378" width="128" height="90"/>
         <element name="Location" positionX="90" positionY="361" width="146" height="236"/>
-        <element name="Route" positionX="360" positionY="486" width="128" height="90"/>
+        <element name="Route" positionX="360" positionY="486" width="128" height="105"/>
     </elements>
 </model>
