@@ -8,7 +8,6 @@
 
 import UIKit
 import MapKit
-import CocoaMQTT
 import CoreData
 
 class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentationControllerDelegate
@@ -29,21 +28,9 @@ class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
             }
         }
     }
-
-    var mqtt: CocoaMQTT?
     
-    func configureMQTTServer() {
-        let clientID = "ios-app-" + UIDevice.current.identifierForVendor!.uuidString
-        mqtt = CocoaMQTT(clientID: clientID, host: "ec2-54-175-5-136.compute-1.amazonaws.com", port: 1883)
-        //        mqtt!.secureMQTT = true
-        if let mqtt = mqtt {
-            mqtt.username = "rhb"
-            mqtt.password = "dbe7ae0914d9f3c162b87304448fefa0"
-            mqtt.willMessage = CocoaMQTTWill(topic: "/will", message: clientID + " shuffles off this mortal coil")
-            mqtt.cleanSession = false
-            mqtt.keepAlive = 60
-            mqtt.delegate = self
-        }
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     // MARK: View Controller Lifecycle
@@ -52,16 +39,10 @@ class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
         super.viewDidLoad()
         registerReveal(menuButton: menuButton)
         initializeVisibleRoutes(routes: ["frist"])
-        connect()
-    }
 
-    func connect() {
-        if (reconnectTimer.isValid) {
-            reconnectTimer.invalidate()
-        }
-
-        configureMQTTServer()
-        mqtt!.connect()
+        let nc = NotificationCenter.default
+        nc.addObserver(forName: (UIApplication.shared.delegate as! AppDelegate).incomingDataNotification, object:nil, queue: nil, using:gpsDataReceived)
+        nc.addObserver(forName: (UIApplication.shared.delegate as! AppDelegate).dataIsStableNotification, object:nil, queue:nil, using:gpsDataIsStable)
     }
 
     @IBOutlet weak var mapView: MKMapView! {
@@ -267,24 +248,8 @@ class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
     }
 
     var pointsToUse: [CLLocationCoordinate2D] = []
-    var addOverlayTimer = Timer()
-    var reconnectTimer = Timer()
-    var lastReceived = Date()
     var myPolyline = MKPolyline()
 
-    func dataIsStable() {
-        registerOverlay(isInitial: true)
-        coreDataContainer?.perform {
-            do {
-                print("saving data now")
-                try self.coreDataContainer?.save()
-            }
-            catch let error {
-                print("Core data error: \(error)")
-            }
-        }
-    }
-    
     func registerOverlay(isInitial: Bool) {
         // delete old one first
         if (myPolyline.pointCount > 0) {
@@ -302,6 +267,24 @@ class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
         }
     }
 
+    func gpsDataIsStable(notification: Notification) -> Void {
+        print("gpsDataIsStable")
+
+        registerOverlay(isInitial: true)
+    }
+    
+    func gpsDataReceived(notification: Notification) -> Void {
+        print("gpsDataReceived!")
+
+        guard let userInfo = notification.userInfo,
+            let message  = userInfo["message"] as? String else {
+            print("notification does not contain message data")
+            return
+        }
+        var gpsArray = message.characters.split { $0 == ";" }.map(String.init)
+        addToRoute(latitude: gpsArray[0], longitude: gpsArray[1])
+    }
+
     func addToRoute(latitude : String, longitude : String) {
         let p = CGPointFromString("{\(latitude),\(longitude)}")
         if (pointsToUse.count == 0) {
@@ -313,121 +296,6 @@ class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
     var coreDataContainer : NSManagedObjectContext? =
         (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
-    var maxLocationId : Int?
-
-    func addLocationToDb(message: CocoaMQTTMessage)
-    {
-        // latitude, longitude, altitude, course, speed, char, satellites, strength
-        var messageParts = message.string!.characters.split { $0 == ";" }.map(String.init)
-        
-        coreDataContainer?.perform {
-            if self.maxLocationId == nil {
-                self.maxLocationId = 0
-                let request = NSFetchRequest<Location>(entityName: "Location")
-                request.predicate = NSPredicate(format: "id==max(id)")
-                
-                if let results = try? self.coreDataContainer!.fetch(request) {
-                    for location in results as [NSManagedObject] {
-                        let mymax = location.value(forKey: "id")! as! Int
-                        print("db max id is \(mymax)")
-                        self.maxLocationId = mymax
-                    }
-                }
-            }
-            
-            if let location = NSEntityDescription.insertNewObject(forEntityName: "Location", into: self.coreDataContainer!) as? Location
-            {
-                location.route = (UIApplication.shared.delegate as! AppDelegate).currentRoute
-                location.latitude = Float(messageParts[0])!
-                location.longitude = Float(messageParts[1])!
-                location.altitude = Float(messageParts[2])!
-                location.course = Float(messageParts[3])!
-                location.speed = Float(messageParts[4])!
-                location.satellites = Int64(messageParts[6])!
-                location.signal = Int64(messageParts[7])!
-                location.timestamp = NSDate.init()  // fake it until datastream has timestamp in it
-                location.id = Int64(self.maxLocationId!)
-                self.maxLocationId! += 1
-            }
-        }
-    }
-}
-
-// MARK:
-
-extension GPXViewController: CocoaMQTTDelegate {
-    
-    func mqtt(_ mqtt: CocoaMQTT, didConnect host: String, port: Int) {
-        print("didConnect \(host):\(port)")
-    }
-    
-    func mqtt(_ mqtt: CocoaMQTT, didConnectAck ack: CocoaMQTTConnAck) {
-        print("didConnectAck: \(ack)，rawValue: \(ack.rawValue), accept = \(ack) ")
-
-        if ack == .accept {
-            mqtt.subscribe("rhb/f/+", qos: CocoaMQTTQOS.qos1)
-        }
-    }
-    
-    func mqtt(_ mqtt: CocoaMQTT, didPublishMessage message: CocoaMQTTMessage, id: UInt16) {
-        print("didPublishMessage with message: \(message.string)")
-    }
-    
-    func mqtt(_ mqtt: CocoaMQTT, didPublishAck id: UInt16) {
-        print("didPublishAck with id: \(id)")
-    }
-    
-    func mqtt(_ mqtt: CocoaMQTT, didReceiveMessage message: CocoaMQTTMessage, id: UInt16 ) {
-        var gpsArray = message.string!.characters.split { $0 == ";" }.map(String.init)
-        addToRoute(latitude: gpsArray[0], longitude: gpsArray[1])
-        addLocationToDb(message: message)
-
-        if (addOverlayTimer.isValid) {
-            addOverlayTimer.invalidate()
-        }
-
-        if (lastReceived.timeIntervalSinceNow < -1) {
-            print("rendering immediately")
-            dataIsStable()
-        }
-        else {
-            print("datastream coming in too fast; delaying render")
-            addOverlayTimer = Timer.scheduledTimer(timeInterval: 1.0, target:self,
-                                                   selector: #selector(GPXViewController.dataIsStable),
-                                                   userInfo: nil, repeats: false)
-        }
-        lastReceived = Date()
-        
-        let name = Notification.Name(rawValue: "MQTTMessageNotification")
-        NotificationCenter.default.post(name: name, object: self, userInfo: ["message": message.string!, "topic": message.topic])
-    }
-    
-    func mqtt(_ mqtt: CocoaMQTT, didSubscribeTopic topic: String) {
-        print("didSubscribeTopic to \(topic)")
-    }
-    
-    func mqtt(_ mqtt: CocoaMQTT, didUnsubscribeTopic topic: String) {
-        print("didUnsubscribeTopic to \(topic)")
-    }
-    
-    func mqttDidPing(_ mqtt: CocoaMQTT) {
-        print("didPing")
-    }
-    
-    func mqttDidReceivePong(_ mqtt: CocoaMQTT) {
-        _console("didReceivePong")
-    }
-    
-    func mqttDidDisconnect(_ mqtt: CocoaMQTT, withError err: Error?) {
-        _console("mqttDidDisconnect " + err.debugDescription)
-        reconnectTimer = Timer.scheduledTimer(timeInterval: 5.0, target:self,
-                                              selector: #selector(GPXViewController.connect),
-                                              userInfo: nil, repeats: true)
-    }
-    
-    func _console(_ info: String) {
-        print("Delegate: \(info)")
-    }
 }
 
 extension UIViewController {
@@ -448,3 +316,5 @@ extension UIViewController {
         }
     }
 }
+
+

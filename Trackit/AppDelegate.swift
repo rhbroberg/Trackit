@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import CocoaMQTT
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -38,6 +39,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("fetch failed, bummer")
         }
 
+        enableMQTTListening()
+
         // Override point for customization after application launch.
         return true
     }
@@ -50,10 +53,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        print("disconnecting mq")
+        mqtt!.disconnect()
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+        print("reconnecting to mq")
+        mqtt!.connect()
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
@@ -62,6 +69,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        print("terminating")
+        mqtt!.disconnect()
     }
 
     // MARK: - Core Data stack
@@ -93,8 +102,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return container
     }()
     
-    // MARK: - Core Data Saving support
-    
     func saveContext () {
         let context = persistentContainer.viewContext
         if context.hasChanges {
@@ -108,7 +115,177 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
-    
 
+    // MARK: - async networking
+    
+    var mqtt: CocoaMQTT?
+    var addOverlayTimer = Timer()
+    var reconnectTimer = Timer()
+    var lastReceived = Date()
+
+    func configureMQTTServer() {
+        let clientID = "ios-app-" + UIDevice.current.identifierForVendor!.uuidString
+        mqtt = CocoaMQTT(clientID: clientID, host: "ec2-54-175-5-136.compute-1.amazonaws.com", port: 1883)
+        // mqtt!.secureMQTT = true
+        if let mqtt = mqtt {
+            mqtt.username = "rhb"
+            mqtt.password = "dbe7ae0914d9f3c162b87304448fefa0"
+            mqtt.willMessage = CocoaMQTTWill(topic: "/will", message: clientID + " shuffles off this mortal coil")
+            mqtt.cleanSession = false
+            mqtt.keepAlive = 60
+            mqtt.delegate = self
+        }
+    }
+    
+    func enableMQTTListening() {
+        if (reconnectTimer.isValid) {
+            reconnectTimer.invalidate()
+        }
+        
+        configureMQTTServer()
+        mqtt!.connect()
+    }
+    
+    func dataIsStable() {
+        let coreDataContainer = persistentContainer.viewContext
+        coreDataContainer.perform {
+            do {
+                print("saving data now")
+                try coreDataContainer.save()
+            }
+            catch let error {
+                print("Core data error: \(error)")
+            }
+        }
+        let nc = NotificationCenter.default
+        nc.post(name:dataIsStableNotification,
+                object: nil,
+                userInfo:[:])
+    }
+    
+    var maxLocationId : Int?
+    
+    func addLocationToDb(message: CocoaMQTTMessage)
+    {
+        // latitude, longitude, altitude, course, speed, char, satellites, strength
+        var messageParts = message.string!.characters.split { $0 == ";" }.map(String.init)
+        
+        let coreDataContainer = persistentContainer.viewContext
+        coreDataContainer.perform {
+            if self.maxLocationId == nil {
+                self.maxLocationId = 0
+                let request = NSFetchRequest<Location>(entityName: "Location")
+                request.predicate = NSPredicate(format: "id==max(id)")
+
+                
+                if let results = try? coreDataContainer.fetch(request) {
+                    for location in results as [NSManagedObject] {
+                        let mymax = location.value(forKey: "id")! as! Int
+                        print("db max id is \(mymax)")
+                        self.maxLocationId = mymax
+                    }
+                }
+            }
+            
+            if let location = NSEntityDescription.insertNewObject(forEntityName: "Location", into: coreDataContainer) as? Location
+            {
+                location.route = (UIApplication.shared.delegate as! AppDelegate).currentRoute
+                location.latitude = Float(messageParts[0])!
+                location.longitude = Float(messageParts[1])!
+                location.altitude = Float(messageParts[2])!
+                location.course = Float(messageParts[3])!
+                location.speed = Float(messageParts[4])!
+                location.satellites = Int64(messageParts[6])!
+                location.signal = Int64(messageParts[7])!
+                location.timestamp = NSDate.init()  // fake it until datastream has timestamp in it
+                location.id = Int64(self.maxLocationId!)
+                self.maxLocationId! += 1
+            }
+        }
+    }
+    let incomingDataNotification = Notification.Name(rawValue: "incoming gps data")
+    let dataIsStableNotification = Notification.Name(rawValue: "data is stable")
+}
+
+// MARK: mqtt Delegate
+
+extension AppDelegate: CocoaMQTTDelegate {
+    
+    func mqtt(_ mqtt: CocoaMQTT, didConnect host: String, port: Int) {
+        print("didConnect \(host):\(port)")
+    }
+    
+    func mqtt(_ mqtt: CocoaMQTT, didConnectAck ack: CocoaMQTTConnAck) {
+        print("didConnectAck: \(ack)，rawValue: \(ack.rawValue), accept = \(ack) ")
+        
+        if ack == .accept {
+            mqtt.subscribe("rhb/f/+", qos: CocoaMQTTQOS.qos1)
+        }
+    }
+    
+    func mqtt(_ mqtt: CocoaMQTT, didPublishMessage message: CocoaMQTTMessage, id: UInt16) {
+        print("didPublishMessage with message: \(message.string)")
+    }
+    
+    func mqtt(_ mqtt: CocoaMQTT, didPublishAck id: UInt16) {
+        print("didPublishAck with id: \(id)")
+    }
+    
+    func mqtt(_ mqtt: CocoaMQTT, didReceiveMessage message: CocoaMQTTMessage, id: UInt16 ) {
+        NotificationCenter.default.post(name:incomingDataNotification, object: nil, userInfo:["message":message.string!, "topic": message.topic])
+        addLocationToDb(message: message)
+        
+        if (addOverlayTimer.isValid) {
+            addOverlayTimer.invalidate()
+        }
+        
+        if (lastReceived.timeIntervalSinceNow < -1) {
+            print("rendering immediately")
+            dataIsStable()
+        }
+        else {
+            print("datastream coming in too fast; delaying render")
+            addOverlayTimer = Timer.scheduledTimer(timeInterval: 1.0, target:self,
+                                                   selector: #selector(AppDelegate.dataIsStable),
+                                                   userInfo: nil, repeats: false)
+        }
+        lastReceived = Date()
+    }
+
+    func mqtt(_ mqtt: CocoaMQTT, didSubscribeTopic topic: String) {
+        print("didSubscribeTopic to \(topic)")
+    }
+    
+    func mqtt(_ mqtt: CocoaMQTT, didUnsubscribeTopic topic: String) {
+        print("didUnsubscribeTopic to \(topic)")
+    }
+    
+    func mqttDidPing(_ mqtt: CocoaMQTT) {
+        print("didPing")
+    }
+    
+    func mqttDidReceivePong(_ mqtt: CocoaMQTT) {
+        _console("didReceivePong")
+    }
+    
+    func mqttDidDisconnect(_ mqtt: CocoaMQTT, withError err: Error?) {
+        switch UIApplication.shared.applicationState {
+        case .background:
+            print("app in Background, not reconnecting")
+        default:
+            print("reconnecting")
+
+            _console("mqttDidDisconnect " + err.debugDescription)
+            reconnectTimer = Timer.scheduledTimer(timeInterval: 5.0, target:self,
+                                                  selector: #selector(AppDelegate.enableMQTTListening),
+                                                  userInfo: nil, repeats: true)
+            break
+        }
+
+    }
+    
+    func _console(_ info: String) {
+        print("Delegate: \(info)")
+    }
 }
 
