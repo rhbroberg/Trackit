@@ -15,6 +15,20 @@ class RouteTableViewCell: UITableViewCell {
     @IBOutlet weak var created: UILabel!
     @IBOutlet weak var isVisible: UISwitch!
 
+    var route: Route? {
+        willSet {
+            if let route = newValue {
+                entries.text = "\(route.locations!.count)"
+                name?.text = route.name!
+                isVisible.isOn = route.isVisible
+                let dateFormat = DateFormatter()
+                dateFormat.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                dateFormat.timeZone = TimeZone.autoupdatingCurrent
+                created?.text = dateFormat.string(for: route.startDate!)
+            }
+        }
+    }
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

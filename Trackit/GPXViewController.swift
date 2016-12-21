@@ -319,13 +319,13 @@ class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
     {
         // latitude, longitude, altitude, course, speed, char, satellites, strength
         var messageParts = message.string!.characters.split { $0 == ";" }.map(String.init)
-
+        
         coreDataContainer?.perform {
             if self.maxLocationId == nil {
                 self.maxLocationId = 0
                 let request = NSFetchRequest<Location>(entityName: "Location")
                 request.predicate = NSPredicate(format: "id==max(id)")
-
+                
                 if let results = try? self.coreDataContainer!.fetch(request) {
                     for location in results as [NSManagedObject] {
                         let mymax = location.value(forKey: "id")! as! Int

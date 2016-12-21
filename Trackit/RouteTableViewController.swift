@@ -32,7 +32,22 @@ class RouteTableViewController: UITableViewController
         }
         getAllRoutes()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        // this would not be required if unwind worked for me, coming back from the route editing
+        getAllRoutes()
+    }
 
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == "editRouteName") {
+            // pass data to next view
+            if let routeEditor = segue.destination as? RouteNameViewController, let cell = sender as? RouteTableViewCell {
+                print("preparing for route name editing, sender is \(sender) ")
+                routeEditor.route = cell.route
+            }
+        }
+    }
+    
     func saveContext() {
         if (coreDataContainer?.hasChanges)! {
             do {
@@ -87,6 +102,11 @@ class RouteTableViewController: UITableViewController
         }
     }
 
+    // unwind target
+    @IBAction func updatedRouteName(_ segue: UIStoryboardSegue) {
+        print("route name updated back yonder")
+    }
+
     // MARK: UITableViewDataSource
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -100,14 +120,7 @@ class RouteTableViewController: UITableViewController
         let cell = tableView.dequeueReusableCell(withIdentifier: "RouteCell", for: indexPath)
 
         if let cell = cell as? RouteTableViewCell {
-            let route = routes[indexPath.row]
-            cell.entries.text = "\(route.locations!.count)"
-            cell.name?.text = route.name!
-            cell.isVisible.isOn = route.isVisible
-            let dateFormat = DateFormatter()
-            dateFormat.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            dateFormat.timeZone = TimeZone.autoupdatingCurrent
-            cell.created?.text = dateFormat.string(for: route.startDate!)
+            cell.route = routes[indexPath.row]
         }
 
         return cell
