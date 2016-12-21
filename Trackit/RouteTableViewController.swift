@@ -27,6 +27,7 @@ class RouteTableViewController: UITableViewController
                 route.startDate = NSDate.init()
                 route.isVisible = true
                 self.saveContext()
+                (UIApplication.shared.delegate as! AppDelegate).currentRoute = route
             }
         }
         getAllRoutes()
@@ -124,6 +125,7 @@ class RouteTableViewController: UITableViewController
                 self.coreDataContainer!.delete(route)
                 self.routes.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .fade)
+                self.saveContext()
             }
         }
     }

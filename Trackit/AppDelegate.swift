@@ -12,10 +12,32 @@ import CoreData
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    let userDefaults = UserDefaults.standard
     var window: UIWindow?
-
+    var currentRoute: Route? {
+        willSet {
+            print("route being set")
+            userDefaults.set(newValue?.name, forKey: "currentRoute")
+        }
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        print(NSHomeDirectory())
+        let currentRouteName = userDefaults.string(forKey: "currentRoute") ?? "no route"
+
+        let request: NSFetchRequest<Route> = Route.fetchRequest()
+        request.predicate = NSPredicate(format: "name == %@", currentRouteName)
+        
+        do {
+            let routes = try self.persistentContainer.viewContext.fetch(request)
+            print("i see \(routes.count) matching routes to \(currentRouteName)")
+            if routes.count == 1 {
+                currentRoute = routes[0]
+            }
+        } catch {
+            print("fetch failed, bummer")
+        }
+
         // Override point for customization after application launch.
         return true
     }

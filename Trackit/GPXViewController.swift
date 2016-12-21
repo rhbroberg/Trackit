@@ -337,6 +337,7 @@ class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
             
             if let location = NSEntityDescription.insertNewObject(forEntityName: "Location", into: self.coreDataContainer!) as? Location
             {
+                location.route = (UIApplication.shared.delegate as! AppDelegate).currentRoute
                 location.latitude = Float(messageParts[0])!
                 location.longitude = Float(messageParts[1])!
                 location.altitude = Float(messageParts[2])!
