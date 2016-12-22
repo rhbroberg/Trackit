@@ -125,14 +125,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func configureMQTTServer() {
         let clientID = "ios-app-" + UIDevice.current.identifierForVendor!.uuidString
-        mqtt = CocoaMQTT(clientID: clientID, host: "ec2-54-175-5-136.compute-1.amazonaws.com", port: 1883)
-        // mqtt!.secureMQTT = true
+        mqtt = CocoaMQTT(clientID: clientID, host: userDefaults.string(forKey: "settings.connection.server") ?? "ec2-54-175-5-136.compute-1.amazonaws.com", port: UInt16(userDefaults.integer(forKey: "settings.connection.port")))
+        mqtt!.secureMQTT = userDefaults.bool(forKey: "settings.connection.isSecure")
         if let mqtt = mqtt {
-            mqtt.username = "rhb"
-            mqtt.password = "dbe7ae0914d9f3c162b87304448fefa0"
+            let userDefaults = UserDefaults.standard
+
+            mqtt.username = userDefaults.string(forKey: "settings.account.username") ?? "rhb"
+            mqtt.password = userDefaults.string(forKey: "settings.account.password") ?? "dbe7ae0914d9f3c162b87304448fefa0"
             mqtt.willMessage = CocoaMQTTWill(topic: "/will", message: clientID + " shuffles off this mortal coil")
             mqtt.cleanSession = false
-            mqtt.keepAlive = 60
+            mqtt.keepAlive = UInt16(userDefaults.integer(forKey: "settings.connection.keepAlive"))
             mqtt.delegate = self
         }
     }

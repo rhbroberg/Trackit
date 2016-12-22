@@ -481,6 +481,8 @@
                     </navigationItem>
                     <connections>
                         <outlet property="menuButton" destination="n21-2z-bKr" id="wDZ-BV-5Af"/>
+                        <outlet property="password" destination="zlg-Lz-xaV" id="1mN-Jo-CYA"/>
+                        <outlet property="username" destination="RxV-YO-O4H" id="5nD-Il-Isn"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="A4l-DK-HgV" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -507,7 +509,7 @@
                                             <rect key="frame" x="8" y="5" width="51" height="31"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <connections>
-                                                <action selector="visibilityChanged:" destination="DaM-lw-2vb" eventType="valueChanged" id="S3e-yf-AIO"/>
+                                                <action selector="visibilityChanged:" destination="DaM-lw-2vb" eventType="valueChanged" id="Jtj-Id-BKw"/>
                                             </connections>
                                         </switch>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Entries" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ySp-Dy-AJt" userLabel="Entries">
@@ -736,7 +738,11 @@
                         <barButtonItem key="leftBarButtonItem" image="Menu" id="iMe-4W-Llj"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="isSecure" destination="jf5-aS-zqV" id="5Cx-O2-jB8"/>
+                        <outlet property="keepAlive" destination="rMt-Me-LAb" id="v3T-YN-m8h"/>
                         <outlet property="menuButton" destination="iMe-4W-Llj" id="tez-WK-aA3"/>
+                        <outlet property="port" destination="BCx-cb-AlQ" id="5Ra-hF-XNp"/>
+                        <outlet property="server" destination="mmd-85-s0C" id="TRK-h4-eO5"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eB6-7k-wha" userLabel="First Responder" sceneMemberID="firstResponder"/>
