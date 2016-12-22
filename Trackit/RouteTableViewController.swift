@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class RouteTableViewController: UITableViewController
+class RouteTableViewController: UITableViewController, RouteTableViewCellDelegate
 {
     @IBOutlet weak var menuButton: UIBarButtonItem!
     @IBOutlet weak var addRoute: UIBarButtonItem!
@@ -107,9 +107,22 @@ class RouteTableViewController: UITableViewController
         print("route name updated back yonder")
     }
 
+    // MARK: RouteTableViewCellDelegate
+    func visibilityChange(isVisible: Bool, whichCell: RouteTableViewCell) {
+        whichCell.route?.isVisible = isVisible
+        saveContext()
+    }
+
     // MARK: UITableViewDataSource
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
+    }
+
+    // move code to cellForRowAt ?
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let cell = cell as? RouteTableViewCell {
+            cell.delegate = self
+        }
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

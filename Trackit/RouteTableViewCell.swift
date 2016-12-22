@@ -15,6 +15,12 @@ class RouteTableViewCell: UITableViewCell {
     @IBOutlet weak var created: UILabel!
     @IBOutlet weak var isVisible: UISwitch!
 
+    weak var delegate: RouteTableViewCellDelegate?
+
+    @IBAction func visibilityChanged(_ sender: Any) {
+        delegate?.visibilityChange(isVisible: (isVisible?.isOn)!, whichCell: self)
+    }
+
     var route: Route? {
         willSet {
             if let route = newValue {
@@ -40,4 +46,8 @@ class RouteTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+}
+
+protocol RouteTableViewCellDelegate: class {
+    func visibilityChange(isVisible: Bool, whichCell: RouteTableViewCell)
 }

@@ -59,8 +59,8 @@ class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentat
                 let request = NSFetchRequest<Location>(entityName: "Location")
                 let sortDescriptor = NSSortDescriptor(key: "id", ascending: true)
                 request.sortDescriptors = [sortDescriptor]
-                //            request.predicate = NSPredicate(format: "route = %@", route);
-                
+                request.predicate = NSPredicate(format: "route.isVisible = true");
+
                 if let results = try? self.coreDataContainer!.fetch(request) {
                     print("i see \(results.count) locations")
                     for location in results as [NSManagedObject] {
