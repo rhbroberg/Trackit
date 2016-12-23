@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16B2555" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Coordinate" representedClassName="Coordinate" syncable="YES" codeGenerationType="class">
+    <entity name="Coordinate" representedClassName="Coordinate" syncable="YES">
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="longtitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
     </entity>
@@ -9,13 +9,13 @@
         <attribute name="name" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Location" inverseName="device" inverseEntity="Location" syncable="YES"/>
     </entity>
-    <entity name="DynamicGeofence" representedClassName="DynamicGeofence" parentEntity="Geofence" syncable="YES" codeGenerationType="class">
+    <entity name="DynamicGeofence" representedClassName="DynamicGeofence" parentEntity="Geofence" syncable="YES">
         <attribute name="radius" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
     </entity>
-    <entity name="Geofence" representedClassName="Geofence" isAbstract="YES" syncable="YES" codeGenerationType="class">
+    <entity name="Geofence" representedClassName="Geofence" isAbstract="YES" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shouldNotify" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
-        <relationship name="notifications" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Notification" inverseName="geofence" inverseEntity="Notification" syncable="YES"/>
+        <relationship name="notifications" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Violation" inverseName="geofence" inverseEntity="Violation" syncable="YES"/>
     </entity>
     <entity name="Location" representedClassName="Location" syncable="YES">
         <attribute name="altitude" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
@@ -28,35 +28,35 @@
         <attribute name="speed" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="device" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Device" inverseName="locations" inverseEntity="Device" syncable="YES"/>
-        <relationship name="notification" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Notification" inverseName="location" inverseEntity="Notification" syncable="YES"/>
+        <relationship name="notification" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Violation" inverseName="location" inverseEntity="Violation" syncable="YES"/>
         <relationship name="route" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Route" inverseName="locations" inverseEntity="Route" syncable="YES"/>
         <fetchedProperty name="fetchedProperty" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="Location"/>
         </fetchedProperty>
     </entity>
-    <entity name="Notification" representedClassName="Notification" syncable="YES" codeGenerationType="class">
-        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="geofence" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Geofence" inverseName="notifications" inverseEntity="Geofence" syncable="YES"/>
-        <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="notification" inverseEntity="Location" syncable="YES"/>
-    </entity>
-    <entity name="PolyGeofence" representedClassName="PolyGeofence" parentEntity="Geofence" syncable="YES" codeGenerationType="class"/>
+    <entity name="PolyGeofence" representedClassName="PolyGeofence" parentEntity="Geofence" syncable="YES"/>
     <entity name="Route" representedClassName="Route" syncable="YES">
         <attribute name="isVisible" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="locations" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Location" inverseName="route" inverseEntity="Location" syncable="YES"/>
     </entity>
-    <entity name="StaticRadiusGeofence" representedClassName="StaticRadiusGeofence" parentEntity="Geofence" syncable="YES" codeGenerationType="class">
+    <entity name="StaticRadiusGeofence" representedClassName="StaticRadiusGeofence" parentEntity="Geofence" syncable="YES">
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="radius" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
     </entity>
+    <entity name="Violation" representedClassName="Violation" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="geofence" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Geofence" inverseName="notifications" inverseEntity="Geofence" syncable="YES"/>
+        <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="notification" inverseEntity="Location" syncable="YES"/>
+    </entity>
     <elements>
-        <element name="Device" positionX="-54" positionY="450" width="128" height="90"/>
+        <element name="Device" positionX="-54" positionY="450" width="128" height="88"/>
         <element name="Location" positionX="142" positionY="360" width="146" height="251"/>
         <element name="Route" positionX="351" positionY="666" width="128" height="103"/>
         <element name="Geofence" positionX="351" positionY="308" width="128" height="73"/>
-        <element name="Notification" positionX="538" positionY="542" width="128" height="88"/>
+        <element name="Violation" positionX="538" positionY="542" width="128" height="88"/>
         <element name="DynamicGeofence" positionX="619" positionY="270" width="128" height="58"/>
         <element name="StaticRadiusGeofence" positionX="621" positionY="351" width="128" height="88"/>
         <element name="PolyGeofence" positionX="619" positionY="459" width="128" height="43"/>

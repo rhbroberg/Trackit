@@ -2,7 +2,7 @@
 //  Route+CoreDataProperties.swift
 //  Trackit
 //
-//  Created by Richard Broberg on 12/4/16.
+//  Created by Richard Broberg on 12/23/16.
 //  Copyright © 2016 Brobasino. All rights reserved.
 //
 
@@ -16,9 +16,9 @@ extension Route {
         return NSFetchRequest<Route>(entityName: "Route");
     }
 
+    @NSManaged public var isVisible: Bool
     @NSManaged public var name: String?
     @NSManaged public var startDate: NSDate?
-    @NSManaged public var isVisible: Bool
     @NSManaged public var locations: NSSet?
 
 }
