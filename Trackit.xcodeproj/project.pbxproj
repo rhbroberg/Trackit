@@ -20,7 +20,7 @@
 		EC30AB391CF671F700394C33 /* EditWaypointViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC30AB381CF671F700394C33 /* EditWaypointViewController.swift */; };
 		F50933601E0C4AAE009F7B8D /* GeofenceTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F509335F1E0C4AAE009F7B8D /* GeofenceTableViewController.swift */; };
 		F50933621E0D722F009F7B8D /* EditGeofenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50933611E0D722F009F7B8D /* EditGeofenceViewController.swift */; };
-		F50933641E0D7435009F7B8D /* GeofenceCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50933631E0D7435009F7B8D /* GeofenceCellTableViewCell.swift */; };
+		F50933661E0D8628009F7B8D /* GeofenceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50933651E0D8628009F7B8D /* GeofenceTableViewCell.swift */; };
 		F5642B621E0A05210049E986 /* RouteNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5642B611E0A05210049E986 /* RouteNameViewController.swift */; };
 		F582C8641DE674FF00100339 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F582C8631DE674FF00100339 /* MapKit.framework */; };
 		F5B2A7241DF242BC006DA802 /* RouteTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B2A7231DF242BC006DA802 /* RouteTableViewController.swift */; };
@@ -58,7 +58,7 @@
 		EC30AB381CF671F700394C33 /* EditWaypointViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditWaypointViewController.swift; sourceTree = "<group>"; };
 		F509335F1E0C4AAE009F7B8D /* GeofenceTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeofenceTableViewController.swift; sourceTree = "<group>"; };
 		F50933611E0D722F009F7B8D /* EditGeofenceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditGeofenceViewController.swift; sourceTree = "<group>"; };
-		F50933631E0D7435009F7B8D /* GeofenceCellTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeofenceCellTableViewCell.swift; sourceTree = "<group>"; };
+		F50933651E0D8628009F7B8D /* GeofenceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeofenceTableViewCell.swift; sourceTree = "<group>"; };
 		F5642B611E0A05210049E986 /* RouteNameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteNameViewController.swift; sourceTree = "<group>"; };
 		F582C8631DE674FF00100339 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		F5B2A7231DF242BC006DA802 /* RouteTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewController.swift; sourceTree = "<group>"; };
@@ -141,6 +141,7 @@
 				F50933611E0D722F009F7B8D /* EditGeofenceViewController.swift */,
 				EC30AB381CF671F700394C33 /* EditWaypointViewController.swift */,
 				F509335F1E0C4AAE009F7B8D /* GeofenceTableViewController.swift */,
+				F50933651E0D8628009F7B8D /* GeofenceTableViewCell.swift */,
 				EC106B231CF3D806001F59D6 /* GPXViewController.swift */,
 				EC106B341CF3D933001F59D6 /* GPX.swift */,
 				EC30AB361CF66DB800394C33 /* ImageViewController.swift */,
@@ -149,7 +150,6 @@
 				F5B35BF31DF499010014DB32 /* RouteTableViewCell.swift */,
 				F5642B611E0A05210049E986 /* RouteNameViewController.swift */,
 				EC106B331CF3D812001F59D6 /* Supporting Files */,
-				F50933631E0D7435009F7B8D /* GeofenceCellTableViewCell.swift */,
 			);
 			path = Trackit;
 			sourceTree = "<group>";
@@ -168,8 +168,8 @@
 		F5800DEA1DED15DA00B41812 /* Core Data */ = {
 			isa = PBXGroup;
 			children = (
-				F5B35BF11DF481DF0014DB32 /* CoreDataTableViewController.swift */,
 				F5D909131DED0D7600C576A5 /* Model.xcdatamodeld */,
+				F5B35BF11DF481DF0014DB32 /* CoreDataTableViewController.swift */,
 				F5FA90671DED17B500AA4E02 /* Route+CoreDataClass.swift */,
 				F5FA90681DED17B500AA4E02 /* Route+CoreDataProperties.swift */,
 				F5FA90691DED17B500AA4E02 /* Device+CoreDataClass.swift */,
@@ -335,6 +335,7 @@
 				EC106B241CF3D806001F59D6 /* GPXViewController.swift in Sources */,
 				EC106B371CF3DA46001F59D6 /* MKGPX.swift in Sources */,
 				F5FA90711DED17B500AA4E02 /* Location+CoreDataClass.swift in Sources */,
+				F50933661E0D8628009F7B8D /* GeofenceTableViewCell.swift in Sources */,
 				F50933601E0C4AAE009F7B8D /* GeofenceTableViewController.swift in Sources */,
 				EC30AB391CF671F700394C33 /* EditWaypointViewController.swift in Sources */,
 				F5FA906D1DED17B500AA4E02 /* Route+CoreDataClass.swift in Sources */,
@@ -352,7 +353,6 @@
 				F5FA90701DED17B500AA4E02 /* Device+CoreDataProperties.swift in Sources */,
 				EC106B351CF3D933001F59D6 /* GPX.swift in Sources */,
 				F5D908D51DEA21F500C576A5 /* AccountTableViewController.swift in Sources */,
-				F50933641E0D7435009F7B8D /* GeofenceCellTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

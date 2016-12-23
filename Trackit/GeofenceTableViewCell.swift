@@ -1,5 +1,5 @@
 //
-//  GeofenceCellTableViewCell.swift
+//  GeofenceTableViewCell.swift
 //  Trackit
 //
 //  Created by Richard Broberg on 12/23/16.
@@ -8,8 +8,11 @@
 
 import UIKit
 
-class GeofenceCellTableViewCell: UITableViewCell {
+class GeofenceTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var name: UILabel!
+    @IBOutlet weak var alert: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

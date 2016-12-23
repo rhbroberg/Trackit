@@ -13,11 +13,9 @@ class EditGeofenceViewController: UIViewController {
     @IBOutlet weak var name: UITextField!
     @IBOutlet weak var center: UISegmentedControl!
     @IBOutlet weak var radius: UISlider!
-    @IBOutlet weak var alert: UISwitch!
-    @IBOutlet weak var sms: UISwitch!
-    @IBOutlet weak var email: UISwitch!
-    
-    
+    @IBOutlet weak var notify: UISwitch!
+
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
