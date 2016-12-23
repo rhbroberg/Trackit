@@ -1,21 +1,26 @@
 //
-//  GeofenceViewController.swift
+//  EditGeofenceViewController.swift
 //  Trackit
 //
-//  Created by Richard Broberg on 12/22/16.
+//  Created by Richard Broberg on 12/23/16.
 //  Copyright © 2016 Brobasino. All rights reserved.
 //
 
 import UIKit
 
-class GeofenceViewController: UIViewController {
+class EditGeofenceViewController: UIViewController {
 
-    @IBOutlet weak var menuButton: UIBarButtonItem!
+    @IBOutlet weak var name: UITextField!
+    @IBOutlet weak var center: UISegmentedControl!
+    @IBOutlet weak var radius: UISlider!
+    @IBOutlet weak var alert: UISwitch!
+    @IBOutlet weak var sms: UISwitch!
+    @IBOutlet weak var email: UISwitch!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        registerReveal(menuButton: menuButton)
+
         // Do any additional setup after loading the view.
     }
 
