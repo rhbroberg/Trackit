@@ -13,8 +13,8 @@ class ConnectionTableViewController: UITableViewController {
     @IBOutlet weak var menuButton: UIBarButtonItem!
     @IBOutlet weak var server: UITextField!
     @IBOutlet weak var port: UITextField!
-    @IBOutlet weak var keepAlive: UITextField!
     @IBOutlet weak var isSecure: UISwitch!
+    @IBOutlet weak var keepAlive: UISlider!
     
 
     override func viewDidLoad() {
@@ -24,7 +24,7 @@ class ConnectionTableViewController: UITableViewController {
         let userDefaults = UserDefaults.standard
         server!.text = userDefaults.string(forKey: "settings.connection.server")
         port!.text = userDefaults.string(forKey: "settings.connection.port")
-        keepAlive!.text = userDefaults.string(forKey: "settings.connection.keepAlive")
+        keepAlive!.value = Float(userDefaults.integer(forKey: "settings.connection.keepAlive"))
         isSecure!.isOn = userDefaults.bool(forKey: "settings.connection.isSecure")
 
         // Uncomment the following line to preserve selection between presentations
@@ -39,7 +39,7 @@ class ConnectionTableViewController: UITableViewController {
 
         userDefaults.set(server!.text, forKey: "settings.connection.server")
         userDefaults.set(port!.text, forKey: "settings.connection.port")
-        userDefaults.set(keepAlive!.text, forKey: "settings.connection.keepAlive")
+        userDefaults.set(keepAlive!.value, forKey: "settings.connection.keepAlive")
         userDefaults.set(isSecure!.isOn, forKey: "settings.connection.isSecure")
     }
 

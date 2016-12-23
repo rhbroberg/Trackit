@@ -232,6 +232,7 @@
                         <segue destination="RQG-VZ-fEp" kind="custom" identifier="sw_front" customClass="SWRevealViewControllerSegueSetController" id="VCd-19-5Q7"/>
                         <segue destination="Iax-Ts-Xzq" kind="custom" identifier="sw_front" customClass="SWRevealViewControllerSegueSetController" id="IyZ-Ha-boy"/>
                         <segue destination="VrX-i1-ieN" kind="custom" identifier="sw_front" customClass="SWRevealViewControllerSegueSetController" id="jf1-gu-w1n"/>
+                        <segue destination="c6d-2e-tug" kind="custom" identifier="sw_front" customClass="SWRevealViewControllerSegueSetController" id="g6D-7b-7pJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RM2-fg-d6S" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -245,7 +246,7 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="JtI-Gd-pkB">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <color key="backgroundColor" red="0.96999999999999997" green="0.88997499999999996" blue="0.64989999999999992" alpha="1" colorSpace="calibratedRGB"/>
                         <sections>
                             <tableViewSection id="i9j-Ez-0Pa">
                                 <cells>
@@ -253,7 +254,7 @@
                                         <rect key="frame" x="0.0" y="35" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0OB-XZ-H6x" id="u51-Ys-Y35">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Map" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xee-Sl-8b5">
@@ -265,6 +266,7 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.96999999999999997" green="0.88997499999999996" blue="0.64989999999999992" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <segue destination="bKO-d5-1Pc" kind="custom" customClass="SWRevealViewControllerSeguePushController" id="F7u-E5-uaQ"/>
                                         </connections>
@@ -273,7 +275,7 @@
                                         <rect key="frame" x="0.0" y="79" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fgu-Nw-6H5" id="Gvp-fN-aJA">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Routes" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="caw-cf-q0u">
@@ -285,6 +287,7 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.96999999999999997" green="0.88997499999999996" blue="0.64989999999999992" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <segue destination="VrX-i1-ieN" kind="custom" customClass="SWRevealViewControllerSeguePushController" id="JRS-mg-QLj"/>
                                         </connections>
@@ -293,7 +296,7 @@
                                         <rect key="frame" x="0.0" y="123" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="owB-5A-6ua" id="Kco-eu-odJ">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Devices" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rRo-kZ-tuY">
@@ -305,12 +308,13 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.96999999999999997" green="0.88997499999999996" blue="0.64989999999999992" alpha="1" colorSpace="calibratedRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="lJX-fm-hXP">
                                         <rect key="frame" x="0.0" y="167" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lJX-fm-hXP" id="okY-vN-Wqb">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Connection" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ARr-5m-5TW">
@@ -322,6 +326,7 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.96999999999999997" green="0.88997499999999996" blue="0.64989999999999992" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <segue destination="RQG-VZ-fEp" kind="custom" customClass="SWRevealViewControllerSeguePushController" id="AHx-Fc-OHb"/>
                                         </connections>
@@ -330,7 +335,7 @@
                                         <rect key="frame" x="0.0" y="211" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ywR-hH-IBa" id="8Xn-Q7-kH5">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Notification" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ys9-3n-kRg">
@@ -342,12 +347,13 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.96999999999999997" green="0.88997499999999996" blue="0.64989999999999992" alpha="1" colorSpace="calibratedRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="zRq-Pa-yJe">
                                         <rect key="frame" x="0.0" y="255" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zRq-Pa-yJe" id="szd-X6-XtV">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Geofence" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5ZU-yz-CYi">
@@ -359,12 +365,16 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.96999999999999997" green="0.88997499999999996" blue="0.64989999999999992" alpha="1" colorSpace="calibratedRGB"/>
+                                        <connections>
+                                            <segue destination="c6d-2e-tug" kind="custom" customClass="SWRevealViewControllerSeguePushController" id="YAJ-5V-nsv"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Mm7-OK-FtI">
                                         <rect key="frame" x="0.0" y="299" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Mm7-OK-FtI" id="YSy-fU-ohK">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Account" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tk7-2h-Me3">
@@ -376,6 +386,7 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.96999999999999997" green="0.88997499999999996" blue="0.64989999999999992" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <segue destination="Iax-Ts-Xzq" kind="custom" customClass="SWRevealViewControllerSeguePushController" id="YzW-uP-Fqm"/>
                                         </connections>
@@ -502,7 +513,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="73"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="DaM-lw-2vb" id="BmN-7T-PN7">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="73"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="72"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0PL-th-sWZ" userLabel="Visible">
@@ -695,13 +706,10 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rMt-Me-LAb">
-                                                    <rect key="frame" x="130" y="6" width="150" height="30"/>
+                                                <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="60" minValue="0.0" maxValue="900" continuous="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Her-ru-mye">
+                                                    <rect key="frame" x="128" y="7" width="150" height="31"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <nil key="textColor"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
-                                                </textField>
+                                                </slider>
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -738,8 +746,8 @@
                         <barButtonItem key="leftBarButtonItem" image="Menu" id="iMe-4W-Llj"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="isSecure" destination="jf5-aS-zqV" id="5Cx-O2-jB8"/>
-                        <outlet property="keepAlive" destination="rMt-Me-LAb" id="v3T-YN-m8h"/>
+                        <outlet property="isSecure" destination="jf5-aS-zqV" id="Q8c-Wb-Ykw"/>
+                        <outlet property="keepAlive" destination="Her-ru-mye" id="eee-sI-M6K"/>
                         <outlet property="menuButton" destination="iMe-4W-Llj" id="tez-WK-aA3"/>
                         <outlet property="port" destination="BCx-cb-AlQ" id="5Ra-hF-XNp"/>
                         <outlet property="server" destination="mmd-85-s0C" id="TRK-h4-eO5"/>
@@ -767,6 +775,46 @@
             </objects>
             <point key="canvasLocation" x="1313" y="3124"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="NYc-Fu-ZVj">
+            <objects>
+                <navigationController id="c6d-2e-tug" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="CXy-3s-oLt">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="s9d-z3-weR" kind="relationship" relationship="rootViewController" id="p0Y-wt-h1J"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UWv-pZ-bna" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1337" y="3931"/>
+        </scene>
+        <!--Geofence View Controller-->
+        <scene sceneID="QBp-Lt-0fE">
+            <objects>
+                <viewController id="s9d-z3-weR" customClass="GeofenceViewController" customModule="Trackit" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="k2Y-2F-cge"/>
+                        <viewControllerLayoutGuide type="bottom" id="aUN-VV-NPB"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="5uD-Yk-bIk">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Euo-ql-Uzn">
+                        <barButtonItem key="leftBarButtonItem" image="Menu" id="8da-lX-IBK"/>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="menuButton" destination="8da-lX-IBK" id="xKz-i6-jux"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QNt-jR-Dq7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2268" y="3931"/>
+        </scene>
     </scenes>
     <resources>
         <image name="Menu" width="22" height="22"/>
@@ -775,9 +823,10 @@
         <image name="location" width="26" height="26"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="jf1-gu-w1n"/>
-        <segue reference="IyZ-Ha-boy"/>
-        <segue reference="VCd-19-5Q7"/>
-        <segue reference="xmj-2N-ipT"/>
+        <segue reference="F7u-E5-uaQ"/>
+        <segue reference="JRS-mg-QLj"/>
+        <segue reference="YzW-uP-Fqm"/>
+        <segue reference="YAJ-5V-nsv"/>
+        <segue reference="AHx-Fc-OHb"/>
     </inferredMetricsTieBreakers>
 </document>
