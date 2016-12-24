@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16B2555" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16C67" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Coordinate" representedClassName="Coordinate" syncable="YES">
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="longtitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="polygon" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PolyGeofence" inverseName="bounds" inverseEntity="PolyGeofence" syncable="YES"/>
     </entity>
     <entity name="Device" representedClassName="Device" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
@@ -34,7 +35,9 @@
             <fetchRequest name="fetchedPropertyFetchRequest" entity="Location"/>
         </fetchedProperty>
     </entity>
-    <entity name="PolyGeofence" representedClassName="PolyGeofence" parentEntity="Geofence" syncable="YES"/>
+    <entity name="PolyGeofence" representedClassName="PolyGeofence" parentEntity="Geofence" syncable="YES">
+        <relationship name="bounds" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Coordinate" inverseName="polygon" inverseEntity="Coordinate" syncable="YES"/>
+    </entity>
     <entity name="Route" representedClassName="Route" syncable="YES">
         <attribute name="isVisible" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
@@ -52,14 +55,14 @@
         <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="notification" inverseEntity="Location" syncable="YES"/>
     </entity>
     <elements>
+        <element name="Coordinate" positionX="846" positionY="470" width="128" height="88"/>
         <element name="Device" positionX="-54" positionY="450" width="128" height="88"/>
-        <element name="Location" positionX="142" positionY="360" width="146" height="251"/>
-        <element name="Route" positionX="351" positionY="666" width="128" height="103"/>
-        <element name="Geofence" positionX="351" positionY="308" width="128" height="73"/>
-        <element name="Violation" positionX="538" positionY="542" width="128" height="88"/>
         <element name="DynamicGeofence" positionX="619" positionY="270" width="128" height="58"/>
+        <element name="Geofence" positionX="351" positionY="308" width="128" height="73"/>
+        <element name="Location" positionX="142" positionY="360" width="146" height="251"/>
+        <element name="PolyGeofence" positionX="619" positionY="459" width="128" height="58"/>
+        <element name="Route" positionX="351" positionY="666" width="128" height="103"/>
         <element name="StaticRadiusGeofence" positionX="621" positionY="351" width="128" height="88"/>
-        <element name="PolyGeofence" positionX="619" positionY="459" width="128" height="43"/>
-        <element name="Coordinate" positionX="846" positionY="459" width="128" height="73"/>
+        <element name="Violation" positionX="538" positionY="542" width="128" height="88"/>
     </elements>
 </model>
