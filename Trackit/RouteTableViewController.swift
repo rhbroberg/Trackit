@@ -41,26 +41,13 @@ class RouteTableViewController: UITableViewController, RouteTableViewCellDelegat
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "editRouteName") {
             // pass data to next view
-            if let routeEditor = segue.destination as? RouteNameViewController, let cell = sender as? RouteTableViewCell {
+            if let routeEditor = segue.destination as? RouteEditViewController, let cell = sender as? RouteTableViewCell {
                 print("preparing for route name editing, sender is \(sender) ")
                 routeEditor.route = cell.route
             }
         }
     }
     
-    func saveContext() {
-        if (coreDataContainer?.hasChanges)! {
-            do {
-                print("saving data now")
-                try coreDataContainer?.save()
-            }
-        
-            catch let error {
-                print("Core data error: \(error)")
-            }
-        }
-    }
-
     var routes = [Route]() {
         didSet {
         }
@@ -69,6 +56,19 @@ class RouteTableViewController: UITableViewController, RouteTableViewCellDelegat
    var coreDataContainer : NSManagedObjectContext? =
         (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
+    func saveContext() {
+        if (coreDataContainer?.hasChanges)! {
+            do {
+                print("saving data now")
+                try coreDataContainer?.save()
+            }
+                
+            catch let error {
+                print("Core data error: \(error)")
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -100,11 +100,6 @@ class RouteTableViewController: UITableViewController, RouteTableViewCellDelegat
                 self.tableView.reloadData()
             }
         }
-    }
-
-    // unwind target
-    @IBAction func updatedRouteName(_ segue: UIStoryboardSegue) {
-        print("route name updated back yonder")
     }
 
     // MARK: RouteTableViewCellDelegate

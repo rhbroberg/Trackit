@@ -1,5 +1,5 @@
 //
-//  RouteNameViewController.swift
+//  RouteEditViewController.swift
 //  Trackit
 //
 //  Created by Richard Broberg on 12/20/16.
@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class RouteNameViewController: UIViewController {
+class RouteEditViewController: UIViewController {
 
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var value: UITextField!

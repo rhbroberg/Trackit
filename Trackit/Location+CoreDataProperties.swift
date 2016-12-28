@@ -2,7 +2,7 @@
 //  Location+CoreDataProperties.swift
 //  Trackit
 //
-//  Created by Richard Broberg on 12/23/16.
+//  Created by Richard Broberg on 12/24/16.
 //  Copyright © 2016 Brobasino. All rights reserved.
 //
 
@@ -26,7 +26,7 @@ extension Location {
     @NSManaged public var speed: Float
     @NSManaged public var timestamp: NSDate?
     @NSManaged public var device: Device?
-    @NSManaged public var route: Route?
     @NSManaged public var notification: Violation?
+    @NSManaged public var route: Route?
 
 }

@@ -32,7 +32,7 @@
 		F509337C1E0DB95B009F7B8D /* Geofence+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50933701E0DB95B009F7B8D /* Geofence+CoreDataProperties.swift */; };
 		F509337D1E0DB95B009F7B8D /* DynamicGeofence+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50933711E0DB95B009F7B8D /* DynamicGeofence+CoreDataClass.swift */; };
 		F509337E1E0DB95B009F7B8D /* DynamicGeofence+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50933721E0DB95B009F7B8D /* DynamicGeofence+CoreDataProperties.swift */; };
-		F5642B621E0A05210049E986 /* RouteNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5642B611E0A05210049E986 /* RouteNameViewController.swift */; };
+		F5642B621E0A05210049E986 /* RouteEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5642B611E0A05210049E986 /* RouteEditViewController.swift */; };
 		F582C8641DE674FF00100339 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F582C8631DE674FF00100339 /* MapKit.framework */; };
 		F5B2A7241DF242BC006DA802 /* RouteTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B2A7231DF242BC006DA802 /* RouteTableViewController.swift */; };
 		F5B35BF21DF481DF0014DB32 /* CoreDataTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B35BF11DF481DF0014DB32 /* CoreDataTableViewController.swift */; };
@@ -82,7 +82,7 @@
 		F50933701E0DB95B009F7B8D /* Geofence+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Geofence+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		F50933711E0DB95B009F7B8D /* DynamicGeofence+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DynamicGeofence+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F50933721E0DB95B009F7B8D /* DynamicGeofence+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DynamicGeofence+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		F5642B611E0A05210049E986 /* RouteNameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteNameViewController.swift; sourceTree = "<group>"; };
+		F5642B611E0A05210049E986 /* RouteEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteEditViewController.swift; sourceTree = "<group>"; };
 		F582C8631DE674FF00100339 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		F5B2A7231DF242BC006DA802 /* RouteTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewController.swift; sourceTree = "<group>"; };
 		F5B35BF11DF481DF0014DB32 /* CoreDataTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataTableViewController.swift; sourceTree = "<group>"; };
@@ -170,7 +170,7 @@
 				EC106B361CF3DA46001F59D6 /* MKGPX.swift */,
 				F5B2A7231DF242BC006DA802 /* RouteTableViewController.swift */,
 				F5B35BF31DF499010014DB32 /* RouteTableViewCell.swift */,
-				F5642B611E0A05210049E986 /* RouteNameViewController.swift */,
+				F5642B611E0A05210049E986 /* RouteEditViewController.swift */,
 				EC106B331CF3D812001F59D6 /* Supporting Files */,
 			);
 			path = Trackit;
@@ -355,7 +355,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#\n# Set the build number to the current git commit count.\n# If we're using the Dev scheme, then we'll suffix the build\n# number with the current branch name, to make collisions\n# far less likely across feature branches.\n# Based on: http://w3facility.info/question/how-do-i-force-xcode-to-rebuild-the-info-plist-file-in-my-project-every-time-i-build-the-project/\n#\n# Updated with dSYM handling from http://yellowfeather.co.uk/blog/auto-incrementing-build-number-in-xcode-revisited/\n#\n\ngit=`sh /etc/profile; which git`\nappBuild=`\"$git\" rev-list HEAD --count`\nif [ $CONFIGURATION = \"Debug\" ]; then\nbranchName=`\"$git\" rev-parse --abbrev-ref HEAD`\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild-$branchName\" \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild-$branchName\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}.dSYM/Contents/Info.plist\"\nelse\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild\" \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}.dSYM/Contents/Info.plist\"\nfi\necho \"Incremented the build number ${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"";
+			shellScript = "# magic taken from\n# http://blog.jaredsinclair.com/post/97193356620/the-best-of-all-possible-xcode-automated-build\n\n#\n# Set the build number to the current git commit count.\n# If we're using the Dev scheme, then we'll suffix the build\n# number with the current branch name, to make collisions\n# far less likely across feature branches.\n# Based on: http://w3facility.info/question/how-do-i-force-xcode-to-rebuild-the-info-plist-file-in-my-project-every-time-i-build-the-project/\n#\n# Updated with dSYM handling from http://yellowfeather.co.uk/blog/auto-incrementing-build-number-in-xcode-revisited/\n#\n\ngit=`sh /etc/profile; which git`\nappBuild=`\"$git\" rev-list HEAD --count`\nif [ $CONFIGURATION = \"Debug\" ]; then\nbranchName=`\"$git\" rev-parse --abbrev-ref HEAD`\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild-$branchName\" \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild-$branchName\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}.dSYM/Contents/Info.plist\"\nelse\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild\" \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}.dSYM/Contents/Info.plist\"\nfi\necho \"Incremented the build number ${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"";
 		};
 		F69621FEC17D18796BB19801 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -401,7 +401,7 @@
 				F5B35BF41DF499010014DB32 /* RouteTableViewCell.swift in Sources */,
 				F50933751E0DB95B009F7B8D /* StaticRadiusGeofence+CoreDataClass.swift in Sources */,
 				F5FA906F1DED17B500AA4E02 /* Device+CoreDataClass.swift in Sources */,
-				F5642B621E0A05210049E986 /* RouteNameViewController.swift in Sources */,
+				F5642B621E0A05210049E986 /* RouteEditViewController.swift in Sources */,
 				F509337C1E0DB95B009F7B8D /* Geofence+CoreDataProperties.swift in Sources */,
 				EC30AB371CF66DB800394C33 /* ImageViewController.swift in Sources */,
 				F5D908D31DEA1C2300C576A5 /* ConnectionTableViewController.swift in Sources */,

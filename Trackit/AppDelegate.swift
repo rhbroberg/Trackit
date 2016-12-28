@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import CocoaMQTT
+import CoreLocation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,6 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
+    var locationManager: CLLocationManager?
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         print(NSHomeDirectory())
         let currentRouteName = userDefaults.string(forKey: "currentRoute") ?? "no route"
@@ -40,6 +43,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         enableMQTTListening()
+
+        // map location magic
+        locationManager = CLLocationManager()
+        locationManager?.requestWhenInUseAuthorization()
 
         // Override point for customization after application launch.
         return true

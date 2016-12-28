@@ -13,6 +13,8 @@ class GeofenceTableViewCell: UITableViewCell {
     @IBOutlet weak var name: UILabel!
     @IBOutlet weak var alert: UILabel!
     
+    var geofence: Geofence?
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

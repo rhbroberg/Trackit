@@ -11,7 +11,7 @@
         <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Location" inverseName="device" inverseEntity="Location" syncable="YES"/>
     </entity>
     <entity name="DynamicGeofence" representedClassName="DynamicGeofence" parentEntity="Geofence" syncable="YES">
-        <attribute name="radius" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="radius" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
     </entity>
     <entity name="Geofence" representedClassName="Geofence" isAbstract="YES" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
@@ -47,7 +47,7 @@
     <entity name="StaticRadiusGeofence" representedClassName="StaticRadiusGeofence" parentEntity="Geofence" syncable="YES">
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="radius" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="radius" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
     </entity>
     <entity name="Violation" representedClassName="Violation" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
