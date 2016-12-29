@@ -25,9 +25,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var locationManager: CLLocationManager?
     
+    func getVersion() -> String {
+        let dictionary = Bundle.main.infoDictionary!
+        let version = dictionary["CFBundleShortVersionString"] as! String
+        let build = dictionary["CFBundleVersion"] as! String
+        return "\(version) build \(build)"
+    }
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         print(NSHomeDirectory())
         let currentRouteName = userDefaults.string(forKey: "currentRoute") ?? "no route"
+
+        let versionString = getVersion()
+        print("version info is: \(versionString)")
 
         let request: NSFetchRequest<Route> = Route.fetchRequest()
         request.predicate = NSPredicate(format: "name == %@", currentRouteName)
@@ -178,7 +188,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     {
         // latitude, longitude, altitude, course, speed, char, satellites, strength
         var messageParts = message.string!.characters.split { $0 == ";" }.map(String.init)
-        
+
         let coreDataContainer = persistentContainer.viewContext
         coreDataContainer.perform {
             if self.maxLocationId == nil {
@@ -211,10 +221,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 self.maxLocationId! += 1
             }
         }
+        testBounds(latitude: Float(messageParts[0])!, longitude: Float(messageParts[1])!)
     }
+
     let incomingDataNotification = Notification.Name(rawValue: "incoming gps data")
     let dataIsStableNotification = Notification.Name(rawValue: "data is stable")
+    
+    func testBounds(latitude: Float, longitude: Float) {
+//        let center = CLLocationCoordinate2D(latitude: lastUserLocation.coordinate.latitude, longitude: lastUserLocation.coordinate.longitude)
+//        fencingCircle = MKCircle(center: center, radius: CLLocationDistance(radius.value))
+        // foreach geofence, test with this point
+        // provide method at superclass, invoke on each concrete subclass.  dynamic one needs most recent phone location
+    }
 }
+
 
 // MARK: mqtt Delegate
 
