@@ -10,14 +10,12 @@ import UIKit
 
 class AccountTableViewController: UITableViewController {
 
-    @IBOutlet weak var menuButton: UIBarButtonItem!
     @IBOutlet weak var username: UITextField!
     @IBOutlet weak var password: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        registerReveal(menuButton: menuButton)
         let userDefaults = UserDefaults.standard
         username!.text = userDefaults.string(forKey: "settings.account.username")
         password!.text = userDefaults.string(forKey: "settings.account.password")

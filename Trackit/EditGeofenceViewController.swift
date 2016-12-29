@@ -35,7 +35,7 @@ class EditGeofenceViewController: UIViewController, MKMapViewDelegate {
 
         let center = CLLocationCoordinate2D(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude)
         let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001))
-        self.mapView.setRegion(region, animated: true)
+        self.mapView.setRegion(region, animated: false)
         lastUserLocation = userLocation
         registerFencingCircle()
     }

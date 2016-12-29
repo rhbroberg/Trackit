@@ -41,6 +41,7 @@
 		F5D908D31DEA1C2300C576A5 /* ConnectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D908D21DEA1C2300C576A5 /* ConnectionTableViewController.swift */; };
 		F5D908D51DEA21F500C576A5 /* AccountTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D908D41DEA21F500C576A5 /* AccountTableViewController.swift */; };
 		F5D909151DED0D7600C576A5 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F5D909131DED0D7600C576A5 /* Model.xcdatamodeld */; };
+		F5F8FA191E14980C00063B8A /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5F8FA181E14980C00063B8A /* SettingsTableViewController.swift */; };
 		F5FA906D1DED17B500AA4E02 /* Route+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5FA90671DED17B500AA4E02 /* Route+CoreDataClass.swift */; };
 		F5FA906E1DED17B500AA4E02 /* Route+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5FA90681DED17B500AA4E02 /* Route+CoreDataProperties.swift */; };
 		F5FA906F1DED17B500AA4E02 /* Device+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5FA90691DED17B500AA4E02 /* Device+CoreDataClass.swift */; };
@@ -93,6 +94,7 @@
 		F5D908D21DEA1C2300C576A5 /* ConnectionTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionTableViewController.swift; sourceTree = "<group>"; };
 		F5D908D41DEA21F500C576A5 /* AccountTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountTableViewController.swift; sourceTree = "<group>"; };
 		F5D909141DED0D7600C576A5 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		F5F8FA181E14980C00063B8A /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsTableViewController.swift; path = Trackit/SettingsTableViewController.swift; sourceTree = "<group>"; };
 		F5FA90671DED17B500AA4E02 /* Route+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Route+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F5FA90681DED17B500AA4E02 /* Route+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Route+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		F5FA90691DED17B500AA4E02 /* Device+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Device+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 		F5D908D11DEA1BEB00C576A5 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				F5F8FA181E14980C00063B8A /* SettingsTableViewController.swift */,
 				F5D908D21DEA1C2300C576A5 /* ConnectionTableViewController.swift */,
 				F5D908D41DEA21F500C576A5 /* AccountTableViewController.swift */,
 			);
@@ -387,6 +390,7 @@
 				F5FA90711DED17B500AA4E02 /* Location+CoreDataClass.swift in Sources */,
 				F50933661E0D8628009F7B8D /* GeofenceTableViewCell.swift in Sources */,
 				F509337E1E0DB95B009F7B8D /* DynamicGeofence+CoreDataProperties.swift in Sources */,
+				F5F8FA191E14980C00063B8A /* SettingsTableViewController.swift in Sources */,
 				F509337D1E0DB95B009F7B8D /* DynamicGeofence+CoreDataClass.swift in Sources */,
 				F50933791E0DB95B009F7B8D /* Coordinate+CoreDataClass.swift in Sources */,
 				F50933781E0DB95B009F7B8D /* Violation+CoreDataProperties.swift in Sources */,

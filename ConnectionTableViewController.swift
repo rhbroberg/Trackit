@@ -10,7 +10,6 @@ import UIKit
 
 class ConnectionTableViewController: UITableViewController {
 
-    @IBOutlet weak var menuButton: UIBarButtonItem!
     @IBOutlet weak var server: UITextField!
     @IBOutlet weak var port: UITextField!
     @IBOutlet weak var isSecure: UISwitch!
@@ -20,7 +19,6 @@ class ConnectionTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        registerReveal(menuButton: menuButton)
         let userDefaults = UserDefaults.standard
         server!.text = userDefaults.string(forKey: "settings.connection.server")
         port!.text = userDefaults.string(forKey: "settings.connection.port")
