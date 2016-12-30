@@ -10,6 +10,7 @@ import UIKit
 import CoreData
 import CocoaMQTT
 import CoreLocation
+import AudioToolbox
 
 class MQTTListener: NSObject {
     lazy var coreDataContainer : NSManagedObjectContext? =
@@ -128,13 +129,30 @@ class MQTTListener: NSObject {
     }
     
     func testBounds(latitude: Float, longitude: Float) {
-        //        let center = CLLocationCoordinate2D(latitude: lastUserLocation.coordinate.latitude, longitude: lastUserLocation.coordinate.longitude)
-        //        fencingCircle = MKCircle(center: center, radius: CLLocationDistance(radius.value))
         // foreach geofence, test with this point
         // provide method at superclass, invoke on each concrete subclass.  dynamic one needs most recent phone location
+        let request: NSFetchRequest<Geofence> = Geofence.fetchRequest()
+        request.predicate = NSPredicate(format: "shouldNotify == YES")
+
+        do {
+            if let fences = try self.coreDataContainer?.fetch(request) {
+                print("i see \(fences.count) marked as shouldNotify")
+                for fence in fences {
+                    let isWithin = fence.within(bounds: CLLocation(latitude: Double(latitude), longitude: Double(longitude)))
+                    print("fence \(fence.name) is active and within: \(isWithin)")
+                    if !isWithin {
+                        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+                    }
+                }
+            }
+        } catch {
+            print("fetch failed, bummer")
+        }
+
+        coreDataContainer?.perform {
+        }
     }
 }
-
 
 // MARK: mqtt Delegate
 
