@@ -26,7 +26,49 @@ class EditGeofenceViewController: UIViewController, MKMapViewDelegate {
         registerFencingCircle()
     }
     @IBOutlet weak var radiusText: UILabel!
+    @IBAction func categoryChanged(_ sender: Any) {
+        switch category!.selectedSegmentIndex {
+        case 1: break
+        default:
+            removeCenter()
+        }
+        switch category!.selectedSegmentIndex {
+        case 2:
+            removeFencingCircle()
+        default:
+            break
+        }
+    }
 
+    // long press gesture for center point
+    @IBAction func defineCenter(_ sender: UILongPressGestureRecognizer) {
+        switch category!.selectedSegmentIndex {
+        case 1:
+            if sender.state == .began {
+                let coordinate = mapView.convert(sender.location(in: mapView), toCoordinateFrom: mapView)
+                addCenter(coordinate: coordinate, name: "Center")
+            }
+        default: break
+        }
+    }
+
+    var staticCenter: EditableWaypoint?
+
+    func addCenter(coordinate: CLLocationCoordinate2D, name: String)
+    {
+        removeCenter()
+        staticCenter = EditableWaypoint(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        staticCenter!.name = name
+        mapView.addAnnotation(staticCenter!)
+        registerFencingCircle()
+    }
+
+    func removeCenter() {
+        if let existingCenter = staticCenter {
+            mapView.removeAnnotation(existingCenter)
+        }
+    }
+    
     // MARK: - MKMapViewDelegate
     var lastUserLocation:  MKUserLocation?
 
@@ -47,6 +89,8 @@ class EditGeofenceViewController: UIViewController, MKMapViewDelegate {
             let lineView = MKCircleRenderer(overlay: overlay)
             lineView.strokeColor = UIColor.green
             lineView.lineWidth = 1.0
+            lineView.fillColor = .orange
+            lineView.alpha = 0.1
 
             return lineView
         }
@@ -54,16 +98,33 @@ class EditGeofenceViewController: UIViewController, MKMapViewDelegate {
     }
 
     func registerFencingCircle() {
+        var center : CLLocationCoordinate2D?
+
+        switch category!.selectedSegmentIndex {
+        case 0:
         // only draw circle if current location has been acquired
         if let lastUserLocation = lastUserLocation {
-            mapView.remove(fencingCircle)
-            let center = CLLocationCoordinate2D(latitude: lastUserLocation.coordinate.latitude, longitude: lastUserLocation.coordinate.longitude)
+            center = CLLocationCoordinate2D(latitude: lastUserLocation.coordinate.latitude, longitude: lastUserLocation.coordinate.longitude)
+        }
+        case 1:
+            if let staticCenter = staticCenter {
+                center = CLLocationCoordinate2D(latitude: staticCenter.coordinate.latitude, longitude: staticCenter.coordinate.longitude)
+            }
+        default: break
+        }
+
+        removeFencingCircle()
+        if let center = center {
             fencingCircle = MKCircle(center: center, radius: CLLocationDistance(radius.value))
             mapView.add(fencingCircle)
             radiusText!.text = "\(radius.value)"
         }
     }
 
+    func removeFencingCircle() {
+        mapView.remove(fencingCircle)
+    }
+    
     // start out with no geofence defined upon creation; if the type is changed
     // replace instance with new type.  return type when view disappears
     var geofence: Geofence?
@@ -84,43 +145,86 @@ class EditGeofenceViewController: UIViewController, MKMapViewDelegate {
         else {
             name!.text = geofence?.name
             notify!.isOn = (geofence?.shouldNotify)!
+            var whichIndex = 0
 
             if let dynamicFence = geofence as? DynamicGeofence {
                 radius!.value = dynamicFence.radius
+                whichIndex = 0
             }
+            if let staticFence = geofence as? StaticRadiusGeofence {
+                radius!.value = staticFence.radius
+                addCenter(coordinate: CLLocationCoordinate2DMake(staticFence.latitude, staticFence.longitude), name: "Center")
+                whichIndex = 1
+            }
+            category!.selectedSegmentIndex = whichIndex
         }
-        
+
         // Do any additional setup after loading the view.
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        // not sure this is the right path; would have to create a subclass of geofence in the managed context
-        // and delete it each time the user selects a different type.   maybe this class needs to
-        // have other objects to hold onto the subclass state - like a polygon, and the (latitude, longtitude) center;
-        // that way, the creation of the object can be deferred until the last possible minute.
-        // deletion of the previous object will have to occur if it was non-nill
-
-        // first case: geofence added from scratch
-        if geofence == nil {
-            print("creating default geofence")
-            coreDataContainer?.performAndWait {
+    func createGeofence() {
+        print("creating default geofence")
+        coreDataContainer?.performAndWait {
+            switch self.category!.selectedSegmentIndex {
+            case 0:
                 if let geofence = NSEntityDescription.insertNewObject(forEntityName: "DynamicGeofence", into: self.coreDataContainer!) as? DynamicGeofence {
                     geofence.name = self.name!.text
                     geofence.radius = self.radius!.value
                     geofence.shouldNotify = self.notify!.isOn
                     self.geofence = geofence
                 }
-
-                do {
-                    try self.coreDataContainer?.save()
+            case 1:
+                if let geofence = NSEntityDescription.insertNewObject(forEntityName: "StaticRadiusGeofence", into: self.coreDataContainer!) as? StaticRadiusGeofence {
+                    geofence.name = self.name!.text
+                    geofence.latitude = (self.staticCenter?.coordinate.latitude)!
+                    geofence.longitude = (self.staticCenter?.coordinate.longitude)!
+                    geofence.radius = self.radius!.value
+                    geofence.shouldNotify = self.notify!.isOn
+                    self.geofence = geofence
                 }
-                catch {
-                    print("Core data error: \(error)")
-                }
+            default: break
             }
             
+            do {
+                try self.coreDataContainer?.save()
+            }
+            catch {
+                print("Core data error: \(error)")
+            }
         }
+    }
+
+    func updateGeofence() {
+        geofence!.name = self.name!.text
+        geofence!.shouldNotify = self.notify!.isOn
+        
+        switch self.category!.selectedSegmentIndex {
+        case 0:
+            if let geofence = geofence as? DynamicGeofence {
+                geofence.radius = self.radius!.value
+            }
+        case 1:
+            if let geofence = geofence as? StaticRadiusGeofence {
+                geofence.latitude = (self.staticCenter?.coordinate.latitude)!
+                geofence.longitude = (self.staticCenter?.coordinate.longitude)!
+                geofence.radius = self.radius!.value
+            }
+        default: break
+        }
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        // it's probably time to move these behaviors into the subclasses rather than all the switch-case-ing
+        // first case: geofence added from scratch
+        if geofence == nil {
+            createGeofence()
+        }
+        else {
+            updateGeofence()
+        }
+
+        // propagate changed object to delegate
         delegate?.specificGeofenceChanged(newFence: geofence!)
 
         let locationManager = CLLocationManager()
