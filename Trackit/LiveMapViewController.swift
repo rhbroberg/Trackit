@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 import CoreData
 
-class GPXViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentationControllerDelegate
+class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentationControllerDelegate
 {
     // MARK: Public Model
 

@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		92A8CB988A3A6799E26C0974 /* Pods_Trackit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0752CC392AE534C55DC8C782 /* Pods_Trackit.framework */; };
 		EC106B221CF3D806001F59D6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC106B211CF3D806001F59D6 /* AppDelegate.swift */; };
-		EC106B241CF3D806001F59D6 /* GPXViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC106B231CF3D806001F59D6 /* GPXViewController.swift */; };
+		EC106B241CF3D806001F59D6 /* LiveMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC106B231CF3D806001F59D6 /* LiveMapViewController.swift */; };
 		EC106B271CF3D806001F59D6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC106B251CF3D806001F59D6 /* Main.storyboard */; };
 		EC106B291CF3D806001F59D6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC106B281CF3D806001F59D6 /* Assets.xcassets */; };
 		EC106B2C1CF3D806001F59D6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC106B2A1CF3D806001F59D6 /* LaunchScreen.storyboard */; };
@@ -61,7 +61,7 @@
 		ABC7781755548E730A2311F6 /* Pods-Trackit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Trackit.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Trackit/Pods-Trackit.debug.xcconfig"; sourceTree = "<group>"; };
 		EC106B1E1CF3D806001F59D6 /* Trackit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Trackit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC106B211CF3D806001F59D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		EC106B231CF3D806001F59D6 /* GPXViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPXViewController.swift; sourceTree = "<group>"; };
+		EC106B231CF3D806001F59D6 /* LiveMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveMapViewController.swift; sourceTree = "<group>"; };
 		EC106B261CF3D806001F59D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		EC106B281CF3D806001F59D6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EC106B2B1CF3D806001F59D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -171,7 +171,7 @@
 				EC30AB381CF671F700394C33 /* EditWaypointViewController.swift */,
 				F509335F1E0C4AAE009F7B8D /* GeofenceTableViewController.swift */,
 				F50933651E0D8628009F7B8D /* GeofenceTableViewCell.swift */,
-				EC106B231CF3D806001F59D6 /* GPXViewController.swift */,
+				EC106B231CF3D806001F59D6 /* LiveMapViewController.swift */,
 				EC106B341CF3D933001F59D6 /* GPX.swift */,
 				EC30AB361CF66DB800394C33 /* ImageViewController.swift */,
 				EC106B361CF3DA46001F59D6 /* MKGPX.swift */,
@@ -390,7 +390,7 @@
 			files = (
 				F5FA90721DED17B500AA4E02 /* Location+CoreDataProperties.swift in Sources */,
 				F5D908CF1DE917F800C576A5 /* SWRevealViewController.m in Sources */,
-				EC106B241CF3D806001F59D6 /* GPXViewController.swift in Sources */,
+				EC106B241CF3D806001F59D6 /* LiveMapViewController.swift in Sources */,
 				F50933741E0DB95B009F7B8D /* PolyGeofence+CoreDataProperties.swift in Sources */,
 				EC106B371CF3DA46001F59D6 /* MKGPX.swift in Sources */,
 				F5FA90711DED17B500AA4E02 /* Location+CoreDataClass.swift in Sources */,
