@@ -172,6 +172,13 @@ class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPrese
                 }
                 ewvc.waypointToEdit = editableWaypoint
             }
+        } else if segue.identifier == Constants.MapSettings {
+            if let msvc = destination as? MapSettingsViewController {
+                msvc.mapView = mapView
+                if let ppc = msvc.popoverPresentationController {
+                    ppc.delegate = self
+                }
+            }
         }
     }
 
@@ -210,11 +217,11 @@ class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPrese
     // then adapt by going to .OverFullScreen
     // .OverFullScreen fills the whole screen, but lets underlying MVC show through
 
-    func adaptivePresentationStyle(
-        for controller: UIPresentationController,
-        traitCollection: UITraitCollection
+    func adaptivePresentationStyle(for controller: UIPresentationController,
+                                   traitCollection: UITraitCollection
     ) -> UIModalPresentationStyle {
-        return traitCollection.horizontalSizeClass == .compact ? .overFullScreen : .none
+    //    return traitCollection.horizontalSizeClass == .compact ? .overFullScreen : .none
+        return traitCollection.horizontalSizeClass == .compact ? .none : .none
     }
     
     // when adapting to full screen
@@ -222,9 +229,8 @@ class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPrese
     // and install a blurring visual effect behind all the navigation controller draws
     // autoresizingMask is "old style" constraints
     
-    func presentationController(
-        _ controller: UIPresentationController,
-        viewControllerForAdaptivePresentationStyle style: UIModalPresentationStyle
+    func presentationController(_ controller: UIPresentationController,
+                                viewControllerForAdaptivePresentationStyle style: UIModalPresentationStyle
         ) -> UIViewController? {
         if style == .fullScreen || style == .overFullScreen {
             let navcon = UINavigationController(rootViewController: controller.presentedViewController)
@@ -245,6 +251,7 @@ class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPrese
         static let AnnotationViewReuseIdentifier = "waypoint"
         static let ShowImageSegue = "Show Image"
         static let EditUserWaypoint = "Edit Waypoint"
+        static let MapSettings = "Map Settings"
     }
 
     var pointsToUse: [CLLocationCoordinate2D] = []
