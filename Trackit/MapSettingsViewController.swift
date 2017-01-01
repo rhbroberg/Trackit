@@ -60,10 +60,15 @@ class MapSettingsViewController: UIViewController {
         }
     }
 
+//        boundingStack?.translatesAutoresizingMaskIntoConstraints = false
+
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
 
-        preferredContentSize = CGSize(width: boundingStack.bounds.size.width + 45, height: boundingStack.bounds.size.height + 15)
+        // there is a (x,y) offset of the boundingStack view within its parent (this class); make the window size have
+        // the same margin to the right as left; and the same margin to the bottom as top
+        let offset = boundingStack.convert(boundingStack.bounds.origin, to: self.view)
+        preferredContentSize = CGSize(width: boundingStack.bounds.size.width + offset.x * 2, height: boundingStack.bounds.size.height + offset.y * 2)
     }
 
     override func didReceiveMemoryWarning() {
