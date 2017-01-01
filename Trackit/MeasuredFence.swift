@@ -40,3 +40,17 @@ extension DynamicGeofence : CLLocationManagerDelegate {
     }
 }
 
+extension StaticRadiusGeofence : CLLocationManagerDelegate {
+    override func within(bounds: CLLocation) -> Bool {
+        print("static within called")
+        let center = CLLocation(latitude: latitude, longitude: longitude)
+        let targetDistance = center.distance(from: bounds)
+        let difference = targetDistance.subtracting(Double(radius))
+
+        if difference > 0 {
+            return false
+        }
+        return true
+    }
+}
+

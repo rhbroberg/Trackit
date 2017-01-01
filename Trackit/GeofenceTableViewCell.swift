@@ -11,7 +11,6 @@ import UIKit
 class GeofenceTableViewCell: UITableViewCell {
 
     @IBOutlet weak var name: UILabel!
-    @IBOutlet weak var alert: UILabel!
     
     var geofence: Geofence?
 

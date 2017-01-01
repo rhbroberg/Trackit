@@ -28,7 +28,8 @@ class EditGeofenceViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var radiusText: UILabel!
     @IBAction func categoryChanged(_ sender: Any) {
         switch category!.selectedSegmentIndex {
-        case 1: break
+        case 1:
+            break
         default:
             removeCenter()
         }
@@ -73,13 +74,15 @@ class EditGeofenceViewController: UIViewController, MKMapViewDelegate {
     var lastUserLocation:  MKUserLocation?
 
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-        mapView.centerCoordinate = userLocation.location!.coordinate
+        if category!.selectedSegmentIndex == 0 {
+            mapView.centerCoordinate = userLocation.location!.coordinate
 
-        let center = CLLocationCoordinate2D(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude)
-        let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001))
-        self.mapView.setRegion(region, animated: false)
-        lastUserLocation = userLocation
-        registerFencingCircle()
+            let center = CLLocationCoordinate2D(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude)
+            let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001))
+            self.mapView.setRegion(region, animated: false)
+            lastUserLocation = userLocation
+            registerFencingCircle()
+        }
     }
 
     var fencingCircle = MKCircle()
@@ -145,18 +148,20 @@ class EditGeofenceViewController: UIViewController, MKMapViewDelegate {
         else {
             name!.text = geofence?.name
             notify!.isOn = (geofence?.shouldNotify)!
-            var whichIndex = 0
 
             if let dynamicFence = geofence as? DynamicGeofence {
+                category!.selectedSegmentIndex = 0
                 radius!.value = dynamicFence.radius
-                whichIndex = 0
             }
             if let staticFence = geofence as? StaticRadiusGeofence {
+                category!.selectedSegmentIndex = 1
                 radius!.value = staticFence.radius
-                addCenter(coordinate: CLLocationCoordinate2DMake(staticFence.latitude, staticFence.longitude), name: "Center")
-                whichIndex = 1
+                let center = CLLocationCoordinate2DMake(staticFence.latitude, staticFence.longitude)
+                addCenter(coordinate: center, name: "Center")
+
+                let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001))
+                self.mapView.setRegion(region, animated: false)
             }
-            category!.selectedSegmentIndex = whichIndex
         }
 
         // Do any additional setup after loading the view.
@@ -184,13 +189,8 @@ class EditGeofenceViewController: UIViewController, MKMapViewDelegate {
                 }
             default: break
             }
-            
-            do {
-                try self.coreDataContainer?.save()
-            }
-            catch {
-                print("Core data error: \(error)")
-            }
+
+            (UIApplication.shared.delegate as! AppDelegate).saveContext(context: self.coreDataContainer)
         }
     }
 
@@ -211,6 +211,7 @@ class EditGeofenceViewController: UIViewController, MKMapViewDelegate {
             }
         default: break
         }
+        (UIApplication.shared.delegate as! AppDelegate).saveContext(context: coreDataContainer)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
