@@ -2,8 +2,8 @@
 //  Device+CoreDataProperties.swift
 //  Trackit
 //
-//  Created by Richard Broberg on 12/24/16.
-//  Copyright © 2016 Brobasino. All rights reserved.
+//  Created by Richard Broberg on 1/1/17.
+//  Copyright © 2017 Brobasino. All rights reserved.
 //
 
 import Foundation
@@ -19,6 +19,7 @@ extension Device {
     @NSManaged public var id: Int16
     @NSManaged public var name: String?
     @NSManaged public var locations: NSSet?
+    @NSManaged public var violations: Violation?
 
 }
 

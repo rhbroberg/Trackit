@@ -95,7 +95,7 @@ class MQTTListener: NSObject {
                     }
                 }
             }
-            
+
             if let location = NSEntityDescription.insertNewObject(forEntityName: "Location", into: self.coreDataContainer!) as? Location
             {
                 location.route = (UIApplication.shared.delegate as! AppDelegate).currentRoute
@@ -109,12 +109,13 @@ class MQTTListener: NSObject {
                 location.timestamp = NSDate.init()  // fake it until datastream has timestamp in it
                 location.id = Int64(self.maxLocationId!)
                 self.maxLocationId! += 1
+
+                self.testBounds(location: location)
             }
         }
-        testBounds(latitude: Float(messageParts[0])!, longitude: Float(messageParts[1])!)
     }
-    
-    func testBounds(latitude: Float, longitude: Float) {
+
+    func testBounds(location: Location) {
         // foreach geofence, test with this point
         // provide method at superclass, invoke on each concrete subclass.  dynamic one needs most recent phone location
         let request: NSFetchRequest<Geofence> = Geofence.fetchRequest()
@@ -124,10 +125,19 @@ class MQTTListener: NSObject {
             if let fences = try self.coreDataContainer?.fetch(request) {
                 print("i see \(fences.count) marked as shouldNotify")
                 for fence in fences {
-                    let isWithin = fence.within(bounds: CLLocation(latitude: Double(latitude), longitude: Double(longitude)))
+                    let isWithin = fence.within(bounds: CLLocation(latitude: Double(location.latitude), longitude: Double(location.longitude)))
                     print("fence \(fence.name) is active and within: \(isWithin)")
                     if !isWithin {
                         AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+                        coreDataContainer?.perform {
+                            // event compression: check first to see if existing device has un-acknowledged violation before creating a new violation
+                            if let violation = NSEntityDescription.insertNewObject(forEntityName: "Violation", into: self.coreDataContainer!) as? Violation {
+                                violation.geofence = fence
+                                violation.location = location
+                                violation.name = "excursion"
+//                                violation.device =
+                            }
+                        }
                     }
                 }
             }
@@ -135,8 +145,6 @@ class MQTTListener: NSObject {
             print("fetch failed, bummer")
         }
 
-        coreDataContainer?.perform {
-        }
     }
 }
 

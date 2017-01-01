@@ -2,8 +2,8 @@
 //  Violation+CoreDataProperties.swift
 //  Trackit
 //
-//  Created by Richard Broberg on 12/24/16.
-//  Copyright © 2016 Brobasino. All rights reserved.
+//  Created by Richard Broberg on 1/1/17.
+//  Copyright © 2017 Brobasino. All rights reserved.
 //
 
 import Foundation
@@ -17,7 +17,9 @@ extension Violation {
     }
 
     @NSManaged public var name: String?
+    @NSManaged public var acknowledged: NSDate?
     @NSManaged public var geofence: Geofence?
     @NSManaged public var location: Location?
+    @NSManaged public var device: Device?
 
 }

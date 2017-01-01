@@ -134,13 +134,21 @@ class EditGeofenceViewController: UIViewController, MKMapViewDelegate {
     weak var delegate: EditGeofenceViewControllerDelegate?
     var coreDataContainer : NSManagedObjectContext? =
         (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
+
+    func handleTap(gestureRecognizer: UIGestureRecognizer) {
+        view.endEditing(true)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         let locationManager = CLLocationManager()
         locationManager.startUpdatingLocation()
         mapView.showsUserLocation = true
+
+        // allow any tap in view to dismiss keyboard
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(EditGeofenceViewController.handleTap))
+        self.view.addGestureRecognizer(gestureRecognizer)
 
         if geofence == nil {
             name!.text = "boundary"
