@@ -34,6 +34,7 @@ class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPrese
     }
 
     // MARK: View Controller Lifecycle
+    var managedObjectContext: NSManagedObjectContext?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,8 +42,8 @@ class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPrese
         initializeVisibleRoutes(routes: ["frist"])
 
         let nc = NotificationCenter.default
-        nc.addObserver(forName: (UIApplication.shared.delegate as! AppDelegate).incomingDataNotification, object:nil, queue: nil, using:gpsDataReceived)
         nc.addObserver(forName: (UIApplication.shared.delegate as! AppDelegate).dataIsStableNotification, object:nil, queue:nil, using:gpsDataIsStable)
+        nc.addObserver(self, selector: #selector(managedObjectContextObjectsDidChange), name: NSNotification.Name.NSManagedObjectContextObjectsDidChange, object: coreDataContainer)
     }
 
     @IBOutlet weak var mapView: MKMapView! {
@@ -66,7 +67,7 @@ class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPrese
                     for location in results as [NSManagedObject] {
                         let latitude: Float = location.value(forKey: "latitude")! as! Float
                         let longitude: Float = location.value(forKey: "longitude")! as! Float
-                        self.addToRoute(latitude: String(format: "%.9f", latitude), longitude: String(format: "%.9f",longitude))
+                        self.addToRoute(latitude: latitude, longitude: longitude)
                     }
                 }
                 DispatchQueue.main.async {
@@ -151,6 +152,33 @@ class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPrese
         return MKPolylineRenderer()
     }
     
+    func managedObjectContextObjectsDidChange(notification: NSNotification) {
+        guard let userInfo = notification.userInfo else { return }
+        
+        if let inserts = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>, inserts.count > 0 {
+            for insert in inserts {
+                // gps data inserted
+                if let location = insert as? Location {
+                    addToRoute(latitude: location.latitude, longitude: location.longitude)
+                }
+            }
+        }
+
+//        if let updates = userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObject>, updates.count > 0 {
+//            print("--- UPDATES ---")
+//            for update in updates {
+//                print(update.changedValues())
+//            }
+//            print("+++++++++++++++")
+//        }
+//        
+//        if let deletes = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject>, deletes.count > 0 {
+//            print("--- DELETES ---")
+//            print(deletes)
+//            print("+++++++++++++++")
+//        }
+    }
+
     // MARK: Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -279,21 +307,9 @@ class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPrese
 
         registerOverlay(isInitial: true)
     }
-    
-    func gpsDataReceived(notification: Notification) -> Void {
-        print("gpsDataReceived!")
 
-        guard let userInfo = notification.userInfo,
-            let message  = userInfo["message"] as? String else {
-            print("notification does not contain message data")
-            return
-        }
-        var gpsArray = message.characters.split { $0 == ";" }.map(String.init)
-        addToRoute(latitude: gpsArray[0], longitude: gpsArray[1])
-    }
-
-    func addToRoute(latitude : String, longitude : String) {
-        let p = CGPointFromString("{\(latitude),\(longitude)}")
+    func addToRoute(latitude : Float, longitude : Float) {
+        let p = CGPointFromString("{" + String(format: "%.9f", latitude) + "," + String(format: "%.9f", longitude) + "}")
         if (pointsToUse.count == 0) {
             addWaypoint(coordinate: CLLocationCoordinate2D(latitude: CLLocationDegrees(p.x), longitude: CLLocationDegrees(p.y)), name: "Starting Point")
         }

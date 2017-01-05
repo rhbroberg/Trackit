@@ -79,14 +79,14 @@ class MQTTListener: NSObject {
     {
         // latitude, longitude, altitude, course, speed, char, satellites, strength
         var messageParts = message.string!.characters.split { $0 == ";" }.map(String.init)
-        
+        var device : Device?
+
         coreDataContainer?.perform {
             if self.maxLocationId == nil {
                 self.maxLocationId = 0
                 let request = NSFetchRequest<Location>(entityName: "Location")
                 request.predicate = NSPredicate(format: "id==max(id)")
-                
-                
+
                 if let results = try? self.coreDataContainer!.fetch(request) {
                     for location in results as [NSManagedObject] {
                         let mymax = location.value(forKey: "id")! as! Int
@@ -107,15 +107,16 @@ class MQTTListener: NSObject {
                 location.satellites = Int64(messageParts[6])!
                 location.signal = Int64(messageParts[7])!
                 location.timestamp = NSDate.init()  // fake it until datastream has timestamp in it
+                location.device = device
                 location.id = Int64(self.maxLocationId!)
                 self.maxLocationId! += 1
 
-                self.testBounds(location: location)
+                self.testBounds(location: location, device: device)
             }
         }
     }
 
-    func testBounds(location: Location) {
+    func testBounds(location: Location, device: Device?) {
         // foreach geofence, test with this point
         // provide method at superclass, invoke on each concrete subclass.  dynamic one needs most recent phone location
         let request: NSFetchRequest<Geofence> = Geofence.fetchRequest()
@@ -135,7 +136,7 @@ class MQTTListener: NSObject {
                                 violation.geofence = fence
                                 violation.location = location
                                 violation.name = "excursion"
-//                                violation.device =
+                                violation.device = device
                             }
                         }
                     }
