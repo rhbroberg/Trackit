@@ -33,6 +33,9 @@
 		F509337D1E0DB95B009F7B8D /* DynamicGeofence+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50933711E0DB95B009F7B8D /* DynamicGeofence+CoreDataClass.swift */; };
 		F509337E1E0DB95B009F7B8D /* DynamicGeofence+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50933721E0DB95B009F7B8D /* DynamicGeofence+CoreDataProperties.swift */; };
 		F54600581E15A0E80016E53B /* MeasuredFence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54600571E15A0E80016E53B /* MeasuredFence.swift */; };
+		F54A885B1E1DD356006CEDFA /* DeviceTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54A885A1E1DD356006CEDFA /* DeviceTableViewController.swift */; };
+		F54A885D1E1DD385006CEDFA /* DeviceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54A885C1E1DD385006CEDFA /* DeviceTableViewCell.swift */; };
+		F54A885F1E1DDD81006CEDFA /* ShowDeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54A885E1E1DDD81006CEDFA /* ShowDeviceViewController.swift */; };
 		F5642B621E0A05210049E986 /* RouteEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5642B611E0A05210049E986 /* RouteEditViewController.swift */; };
 		F582C8641DE674FF00100339 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F582C8631DE674FF00100339 /* MapKit.framework */; };
 		F5B2A7241DF242BC006DA802 /* RouteTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B2A7231DF242BC006DA802 /* RouteTableViewController.swift */; };
@@ -87,6 +90,9 @@
 		F50933711E0DB95B009F7B8D /* DynamicGeofence+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DynamicGeofence+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F50933721E0DB95B009F7B8D /* DynamicGeofence+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DynamicGeofence+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		F54600571E15A0E80016E53B /* MeasuredFence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasuredFence.swift; sourceTree = "<group>"; };
+		F54A885A1E1DD356006CEDFA /* DeviceTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTableViewController.swift; sourceTree = "<group>"; };
+		F54A885C1E1DD385006CEDFA /* DeviceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTableViewCell.swift; sourceTree = "<group>"; };
+		F54A885E1E1DDD81006CEDFA /* ShowDeviceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowDeviceViewController.swift; sourceTree = "<group>"; };
 		F5642B611E0A05210049E986 /* RouteEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteEditViewController.swift; sourceTree = "<group>"; };
 		F582C8631DE674FF00100339 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		F5B2A7231DF242BC006DA802 /* RouteTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewController.swift; sourceTree = "<group>"; };
@@ -242,6 +248,9 @@
 				F5F8FA181E14980C00063B8A /* SettingsTableViewController.swift */,
 				F5D908D21DEA1C2300C576A5 /* ConnectionTableViewController.swift */,
 				F5D908D41DEA21F500C576A5 /* AccountTableViewController.swift */,
+				F54A885A1E1DD356006CEDFA /* DeviceTableViewController.swift */,
+				F54A885C1E1DD385006CEDFA /* DeviceTableViewCell.swift */,
+				F54A885E1E1DDD81006CEDFA /* ShowDeviceViewController.swift */,
 			);
 			name = Settings;
 			path = ..;
@@ -392,6 +401,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F5FA90721DED17B500AA4E02 /* Location+CoreDataProperties.swift in Sources */,
+				F54A885B1E1DD356006CEDFA /* DeviceTableViewController.swift in Sources */,
 				F5D908CF1DE917F800C576A5 /* SWRevealViewController.m in Sources */,
 				EC106B241CF3D806001F59D6 /* LiveMapViewController.swift in Sources */,
 				F50933741E0DB95B009F7B8D /* PolyGeofence+CoreDataProperties.swift in Sources */,
@@ -403,6 +413,7 @@
 				F509337D1E0DB95B009F7B8D /* DynamicGeofence+CoreDataClass.swift in Sources */,
 				F50933791E0DB95B009F7B8D /* Coordinate+CoreDataClass.swift in Sources */,
 				F50933781E0DB95B009F7B8D /* Violation+CoreDataProperties.swift in Sources */,
+				F54A885D1E1DD385006CEDFA /* DeviceTableViewCell.swift in Sources */,
 				F50933731E0DB95B009F7B8D /* PolyGeofence+CoreDataClass.swift in Sources */,
 				F50933601E0C4AAE009F7B8D /* GeofenceTableViewController.swift in Sources */,
 				EC30AB391CF671F700394C33 /* EditWaypointViewController.swift in Sources */,
@@ -420,6 +431,7 @@
 				EC30AB371CF66DB800394C33 /* ImageViewController.swift in Sources */,
 				F5D908D31DEA1C2300C576A5 /* ConnectionTableViewController.swift in Sources */,
 				F509337B1E0DB95B009F7B8D /* Geofence+CoreDataClass.swift in Sources */,
+				F54A885F1E1DDD81006CEDFA /* ShowDeviceViewController.swift in Sources */,
 				F5F8FA1B1E1571C900063B8A /* MQTTListener.swift in Sources */,
 				F5FA906E1DED17B500AA4E02 /* Route+CoreDataProperties.swift in Sources */,
 				F50933771E0DB95B009F7B8D /* Violation+CoreDataClass.swift in Sources */,
