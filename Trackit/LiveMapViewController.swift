@@ -10,12 +10,16 @@ import UIKit
 import MapKit
 import CoreData
 
-class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentationControllerDelegate
-{
-    // MARK: Public Model
+class DevicePolyLine : MKPolyline {
+    var color : UIColor?
+}
 
-    @IBOutlet weak var menuButton: UIBarButtonItem!
-    
+class RenderableDevice
+{
+    var pointsToUse: [CLLocationCoordinate2D] = []
+    var polyline = DevicePolyLine()
+    var device : Device
+
     var colorMap : [String : UIColor] = ["white" : UIColor.white,
                                          "red" : UIColor.red,
                                          "blue" : UIColor.blue,
@@ -25,6 +29,115 @@ class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPrese
                                          "yellow" : UIColor.yellow,
                                          "magenta" : UIColor.magenta]
     
+    init(device : Device) {
+        self.device = device
+    }
+
+    func render(mapView : MKMapView) -> MKPolyline {
+        // remove old one from map first
+        if (polyline.pointCount > 0) {
+            mapView.remove(polyline)
+        }
+
+        polyline = DevicePolyLine(coordinates: &pointsToUse, count: pointsToUse.count)
+        if device.color != nil {
+            polyline.color = colorMap[device.color!]
+        } else {
+            polyline.color = UIColor.red
+        }
+
+        print("adding polyline to view for \(pointsToUse.count) points")
+
+        return polyline
+    }
+
+    func add(location: Location) {
+        let latitude = location.latitude
+        let longitude = location.longitude
+
+        let p = CGPointFromString("{" + String(format: "%.9f", latitude) + "," + String(format: "%.9f", longitude) + "}")
+        pointsToUse += [CLLocationCoordinate2DMake(CLLocationDegrees(p.x), CLLocationDegrees(p.y))]
+    }
+}
+
+class RenderableRoute
+{
+    var devicesMap : [String : RenderableDevice] = [:]
+
+}
+
+class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPresentationControllerDelegate
+{
+    var activeRoute : String = "default"
+
+    func registerOverlays(isInitial : Bool) {
+        for route in routes {
+            for device in route.value.devicesMap {
+                let overlay = device.value.render(mapView: mapView)
+                mapView.add(overlay)
+            }
+        }
+        adjustVisibleMapView(isInitial: isInitial)
+    }
+
+    func addToRoute(location: Location, route : String) {
+        if routes[route] == nil {
+            routes[route] = RenderableRoute()
+        }
+
+        if let renderedRoute = routes[route] {
+            var deviceName : String
+
+            if let device = location.device,
+                let name = device.name {
+                deviceName = name
+            } else {
+                deviceName = "dummy"
+            }
+//            
+//                if location.device == nil {
+//                    print("bootsrapping 1 time")
+//                    if let device = (UIApplication.shared.delegate as! AppDelegate).mqListener.deviceFromTopic(topic: "rhb/f/l") {
+//                        print("fixed location")
+//                        location.device = device
+//                        deviceName = (device.name)!
+//                    } else {
+//                        deviceName = "dummy"
+//                    }
+//                }
+//                else {
+//                    deviceName = "dummy"
+//                }
+//            }
+
+            if renderedRoute.devicesMap[deviceName] == nil {
+                renderedRoute.devicesMap[deviceName] = RenderableDevice(device: location.device!)
+            }
+
+            if let renderedDevice = renderedRoute.devicesMap[deviceName] {
+                renderedDevice.add(location: location)
+
+                if renderedDevice.pointsToUse.count > 0 {
+                    addWaypoint(coordinate: renderedDevice.pointsToUse.first!, name: "foo")
+                }
+            }
+        }
+    }
+
+    func adjustVisibleMapView(isInitial : Bool) {
+        // http://stackoverflow.com/questions/13569327/zoom-mkmapview-to-fit-polyline-points
+        if let first = mapView.overlays.first {
+            let rect = mapView.overlays.reduce(first.boundingMapRect, {MKMapRectUnion($0, $1.boundingMapRect)})
+            mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top: 50.0, left: 50.0, bottom: 50.0, right: 50.0), animated: isInitial)
+        }
+    }
+
+    // MARK: Public Model
+
+    @IBOutlet weak var menuButton: UIBarButtonItem!
+
+    var routes : [String : RenderableRoute] = [:]
+
     var gpxURL: URL? {
         didSet {
             clearWaypoints()
@@ -43,8 +156,6 @@ class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPrese
     }
 
     // MARK: View Controller Lifecycle
-    var managedObjectContext: NSManagedObjectContext?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         registerReveal(menuButton: menuButton)
@@ -74,14 +185,11 @@ class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPrese
                 if let results = try? self.coreDataContainer!.fetch(request) {
                     print("i see \(results.count) locations")
                     for location in results as [NSManagedObject] {
-                        let latitude: Float = location.value(forKey: "latitude")! as! Float
-                        let longitude: Float = location.value(forKey: "longitude")! as! Float
-                        let device = location.value(forKey: "device")! as! Device
-                        self.addToRoute(location: location)
+                        self.addToRoute(location: location as! Location, route: self.activeRoute)
                     }
                 }
                 DispatchQueue.main.async {
-                    self.registerOverlay(isInitial: false)
+                    self.registerOverlays(isInitial: false)
                 }
             }
         }
@@ -152,9 +260,12 @@ class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPrese
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         if overlay is MKPolyline {
-            print("rendering for overlay")
+            print("rendering for overlay \(overlay)")
             let lineView = MKPolylineRenderer(overlay: overlay)
-            lineView.strokeColor = UIColor.red
+
+            if let customOverlay = overlay as? DevicePolyLine {
+                lineView.strokeColor = customOverlay.color
+            }
             lineView.lineWidth = 1.0
 
             return lineView
@@ -169,7 +280,7 @@ class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPrese
             for insert in inserts {
                 // gps data inserted
                 if let location = insert as? Location {
-                    addToRoute(location: location)
+                    addToRoute(location: location, route: activeRoute)
                 }
             }
         }
@@ -292,43 +403,12 @@ class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPrese
         static let MapSettings = "Map Settings"
     }
 
-    var pointsToUse: [CLLocationCoordinate2D] = []
-    var myPolyline = MKPolyline()
-
-    func registerOverlay(isInitial: Bool) {
-        // delete old one first
-        if (myPolyline.pointCount > 0) {
-            mapView.remove(myPolyline)
-        }
-
-        myPolyline = MKPolyline(coordinates: &pointsToUse, count: pointsToUse.count)
-        print("adding polyline to view for \(pointsToUse.count) points")
-        mapView.add(myPolyline)
-
-        // http://stackoverflow.com/questions/13569327/zoom-mkmapview-to-fit-polyline-points
-        if let first = mapView.overlays.first {
-            let rect = mapView.overlays.reduce(first.boundingMapRect, {MKMapRectUnion($0, $1.boundingMapRect)})
-            mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top: 50.0, left: 50.0, bottom: 50.0, right: 50.0), animated: isInitial)
-        }
-    }
-
     func gpsDataIsStable(notification: Notification) -> Void {
         print("gpsDataIsStable")
-
-        registerOverlay(isInitial: true)
+        
+        registerOverlays(isInitial : true)
     }
-
-    func addToRoute(location: Location) {
-        let latitude = location.latitude
-        let longitude = location.longitude
-        let device = location.value(forKey: "device")! as! Device
-
-        let p = CGPointFromString("{" + String(format: "%.9f", latitude) + "," + String(format: "%.9f", longitude) + "}")
-        if (pointsToUse.count == 0) {
-            addWaypoint(coordinate: CLLocationCoordinate2D(latitude: CLLocationDegrees(p.x), longitude: CLLocationDegrees(p.y)), name: "Starting Point")
-        }
-        pointsToUse += [CLLocationCoordinate2DMake(CLLocationDegrees(p.x), CLLocationDegrees(p.y))]
-     }
+    
 
     var coreDataContainer : NSManagedObjectContext? =
         (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext

@@ -47,13 +47,9 @@ class RouteTableViewController: UITableViewController, RouteTableViewCellDelegat
             }
         }
     }
-    
-    var routes = [Route]() {
-        didSet {
-        }
-    }
 
-   var coreDataContainer : NSManagedObjectContext? =
+    var routes = [Route]()
+    var coreDataContainer : NSManagedObjectContext? =
         (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     func saveContext() {
@@ -73,7 +69,6 @@ class RouteTableViewController: UITableViewController, RouteTableViewCellDelegat
         super.viewDidLoad()
 
         registerReveal(menuButton: menuButton)
-        getAllRoutes()
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false

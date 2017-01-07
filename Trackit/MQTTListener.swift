@@ -86,7 +86,6 @@ class MQTTListener: NSObject {
             do {
                 let devices = try self.coreDataContainer!.fetch(request)
                 if devices.count == 1 {
-                    print("found device \(devices[0])")
                     return devices[0]
                 }
             }

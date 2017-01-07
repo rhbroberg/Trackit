@@ -30,9 +30,10 @@ class ShowDeviceViewController: UIViewController, UIPickerViewDelegate, UIPicker
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if let device = device {
+        if let device = device,
+            let color = device.color {
             name!.text = device.name
-            selectedColor = device.color!
+            selectedColor = color
         }
         else {
             name!.text = "undefined device"
