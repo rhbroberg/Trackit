@@ -16,6 +16,15 @@ class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPrese
 
     @IBOutlet weak var menuButton: UIBarButtonItem!
     
+    var colorMap : [String : UIColor] = ["white" : UIColor.white,
+                                         "red" : UIColor.red,
+                                         "blue" : UIColor.blue,
+                                         "green" : UIColor.green,
+                                         "purple" : UIColor.purple,
+                                         "orange" : UIColor.orange,
+                                         "yellow" : UIColor.yellow,
+                                         "magenta" : UIColor.magenta]
+    
     var gpxURL: URL? {
         didSet {
             clearWaypoints()
@@ -67,7 +76,8 @@ class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPrese
                     for location in results as [NSManagedObject] {
                         let latitude: Float = location.value(forKey: "latitude")! as! Float
                         let longitude: Float = location.value(forKey: "longitude")! as! Float
-                        self.addToRoute(latitude: latitude, longitude: longitude)
+                        let device = location.value(forKey: "device")! as! Device
+                        self.addToRoute(location: location)
                     }
                 }
                 DispatchQueue.main.async {
@@ -76,7 +86,7 @@ class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPrese
             }
         }
     }
-    
+
     // MARK: Private Implementation
 
     fileprivate func clearWaypoints() {
@@ -159,7 +169,7 @@ class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPrese
             for insert in inserts {
                 // gps data inserted
                 if let location = insert as? Location {
-                    addToRoute(latitude: location.latitude, longitude: location.longitude)
+                    addToRoute(location: location)
                 }
             }
         }
@@ -308,7 +318,11 @@ class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPrese
         registerOverlay(isInitial: true)
     }
 
-    func addToRoute(latitude : Float, longitude : Float) {
+    func addToRoute(location: Location) {
+        let latitude = location.latitude
+        let longitude = location.longitude
+        let device = location.value(forKey: "device")! as! Device
+
         let p = CGPointFromString("{" + String(format: "%.9f", latitude) + "," + String(format: "%.9f", longitude) + "}")
         if (pointsToUse.count == 0) {
             addWaypoint(coordinate: CLLocationCoordinate2D(latitude: CLLocationDegrees(p.x), longitude: CLLocationDegrees(p.y)), name: "Starting Point")

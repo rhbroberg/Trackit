@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class ShowDeviceViewController: UIViewController {
+class ShowDeviceViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 
     @IBOutlet weak var name: UITextField!
     @IBOutlet weak var id: UILabel!
@@ -18,22 +18,30 @@ class ShowDeviceViewController: UIViewController {
     
     @IBAction func updateFirmware(_ sender: Any) {
     }
+    @IBOutlet weak var colorPicker: UIPickerView!
 
     weak var delegate : editDeviceViewControllerDelegate?
     var device : Device?
     var coreDataContainer : NSManagedObjectContext? =
         (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var selectedColor : String = ""
+    var pickerChoices : [String] = ["red", "yellow", "blue", "orange", "magenta", "green", "purple"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         if let device = device {
             name!.text = device.name
+            selectedColor = device.color!
         }
         else {
             name!.text = "undefined device"
+            selectedColor = "red"
         }
-        
+        colorPicker.delegate = self
+        colorPicker.dataSource = self
+        colorPicker.selectRow(pickerChoices.index(of: selectedColor)!, inComponent: 0, animated: false)
+
         // allow any tap in view to dismiss keyboard
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ShowDeviceViewController.handleTap))
         self.view.addGestureRecognizer(gestureRecognizer)
@@ -45,10 +53,9 @@ class ShowDeviceViewController: UIViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        // it's probably time to move these behaviors into the subclasses rather than all the switch-case-ing
-        // first case: geofence added from scratch
         if let device = device {
             device.name = name!.text
+            device.color = selectedColor
         }
         else {
             if let device = NSEntityDescription.insertNewObject(forEntityName: "Device", into: self.coreDataContainer!) as? Device {
@@ -66,8 +73,28 @@ class ShowDeviceViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 
+    // MARK: - UIPickerView
+    // The number of columns of data
+    func numberOfComponents(in: UIPickerView) -> Int {
+        return 1
+    }
+    
+    // The number of rows of data
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return pickerChoices.count
+    }
+    
+    // The data to return for the row and component (column) that's being passed in
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return pickerChoices[row]
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        print("selected \(row)")
+        selectedColor = pickerChoices[row]
+    }
+    
     /*
     // MARK: - Navigation
 

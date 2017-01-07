@@ -73,13 +73,34 @@ class MQTTListener: NSObject {
                 userInfo:[:])
     }
     
+    var deviceTopicMap = [String : Device]()
     var maxLocationId : Int?
     
+    func deviceFromTopic(topic : String) -> Device? {
+        let topicParts = topic.components(separatedBy: "/")
+
+        if let deviceName = topicParts.last {
+            let request = NSFetchRequest<Device>(entityName: "Device")
+            request.predicate = NSPredicate(format: "name == %@", deviceName)
+
+            do {
+                let devices = try self.coreDataContainer!.fetch(request)
+                if devices.count == 1 {
+                    print("found device \(devices[0])")
+                    return devices[0]
+                }
+            }
+            catch {
+                print("device retrival failure: \(error)")
+            }
+        }
+        return nil
+    }
+
     func addLocationToDb(message: CocoaMQTTMessage)
     {
         // latitude, longitude, altitude, course, speed, char, satellites, strength
         var messageParts = message.string!.characters.split { $0 == ";" }.map(String.init)
-        var device : Device?
 
         coreDataContainer?.perform {
             if self.maxLocationId == nil {
@@ -95,6 +116,8 @@ class MQTTListener: NSObject {
                     }
                 }
             }
+
+            let device = self.deviceFromTopic(topic: message.topic)
 
             if let location = NSEntityDescription.insertNewObject(forEntityName: "Location", into: self.coreDataContainer!) as? Location
             {
