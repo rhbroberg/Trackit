@@ -36,6 +36,7 @@
 		F54A885B1E1DD356006CEDFA /* DeviceTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54A885A1E1DD356006CEDFA /* DeviceTableViewController.swift */; };
 		F54A885D1E1DD385006CEDFA /* DeviceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54A885C1E1DD385006CEDFA /* DeviceTableViewCell.swift */; };
 		F54A885F1E1DDD81006CEDFA /* ShowDeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54A885E1E1DDD81006CEDFA /* ShowDeviceViewController.swift */; };
+		F54A887F1E21BD08006CEDFA /* DeviceSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54A887E1E21BD08006CEDFA /* DeviceSearchViewController.swift */; };
 		F5642B621E0A05210049E986 /* RouteEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5642B611E0A05210049E986 /* RouteEditViewController.swift */; };
 		F582C8641DE674FF00100339 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F582C8631DE674FF00100339 /* MapKit.framework */; };
 		F5B2A7241DF242BC006DA802 /* RouteTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B2A7231DF242BC006DA802 /* RouteTableViewController.swift */; };
@@ -55,6 +56,23 @@
 		F5FA90711DED17B500AA4E02 /* Location+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5FA906B1DED17B500AA4E02 /* Location+CoreDataClass.swift */; };
 		F5FA90721DED17B500AA4E02 /* Location+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5FA906C1DED17B500AA4E02 /* Location+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F54A886B1E21837A006CEDFA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EC106B161CF3D806001F59D6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EC106B1D1CF3D806001F59D6;
+			remoteInfo = Trackit;
+		};
+		F54A88791E2186B6006CEDFA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EC106B161CF3D806001F59D6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EC106B1D1CF3D806001F59D6;
+			remoteInfo = Trackit;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		0752CC392AE534C55DC8C782 /* Pods_Trackit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Trackit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -93,6 +111,9 @@
 		F54A885A1E1DD356006CEDFA /* DeviceTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTableViewController.swift; sourceTree = "<group>"; };
 		F54A885C1E1DD385006CEDFA /* DeviceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTableViewCell.swift; sourceTree = "<group>"; };
 		F54A885E1E1DDD81006CEDFA /* ShowDeviceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowDeviceViewController.swift; sourceTree = "<group>"; };
+		F54A88661E21837A006CEDFA /* TrackitUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrackitUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F54A88741E2186B6006CEDFA /* TrackitUITests-1.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TrackitUITests-1.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F54A887E1E21BD08006CEDFA /* DeviceSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DeviceSearchViewController.swift; path = Trackit/DeviceSearchViewController.swift; sourceTree = "<group>"; };
 		F5642B611E0A05210049E986 /* RouteEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteEditViewController.swift; sourceTree = "<group>"; };
 		F582C8631DE674FF00100339 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		F5B2A7231DF242BC006DA802 /* RouteTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewController.swift; sourceTree = "<group>"; };
@@ -122,6 +143,20 @@
 			files = (
 				F582C8641DE674FF00100339 /* MapKit.framework in Frameworks */,
 				92A8CB988A3A6799E26C0974 /* Pods_Trackit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F54A88631E21837A006CEDFA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F54A88711E2186B6006CEDFA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,6 +198,8 @@
 			isa = PBXGroup;
 			children = (
 				EC106B1E1CF3D806001F59D6 /* Trackit.app */,
+				F54A88661E21837A006CEDFA /* TrackitUITests.xctest */,
+				F54A88741E2186B6006CEDFA /* TrackitUITests-1.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -245,6 +282,7 @@
 		F5D908D11DEA1BEB00C576A5 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				F54A887E1E21BD08006CEDFA /* DeviceSearchViewController.swift */,
 				F5F8FA181E14980C00063B8A /* SettingsTableViewController.swift */,
 				F5D908D21DEA1C2300C576A5 /* ConnectionTableViewController.swift */,
 				F5D908D41DEA21F500C576A5 /* AccountTableViewController.swift */,
@@ -280,13 +318,49 @@
 			productReference = EC106B1E1CF3D806001F59D6 /* Trackit.app */;
 			productType = "com.apple.product-type.application";
 		};
+		F54A88651E21837A006CEDFA /* TrackitUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F54A886D1E21837A006CEDFA /* Build configuration list for PBXNativeTarget "TrackitUITests" */;
+			buildPhases = (
+				F54A88621E21837A006CEDFA /* Sources */,
+				F54A88631E21837A006CEDFA /* Frameworks */,
+				F54A88641E21837A006CEDFA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F54A886C1E21837A006CEDFA /* PBXTargetDependency */,
+			);
+			name = TrackitUITests;
+			productName = TrackitUITests;
+			productReference = F54A88661E21837A006CEDFA /* TrackitUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		F54A88731E2186B6006CEDFA /* TrackitUITests-1 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F54A887B1E2186B6006CEDFA /* Build configuration list for PBXNativeTarget "TrackitUITests-1" */;
+			buildPhases = (
+				F54A88701E2186B6006CEDFA /* Sources */,
+				F54A88711E2186B6006CEDFA /* Frameworks */,
+				F54A88721E2186B6006CEDFA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F54A887A1E2186B6006CEDFA /* PBXTargetDependency */,
+			);
+			name = "TrackitUITests-1";
+			productName = "TrackitUITests-1";
+			productReference = F54A88741E2186B6006CEDFA /* TrackitUITests-1.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		EC106B161CF3D806001F59D6 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0730;
+				LastSwiftUpdateCheck = 0820;
 				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = Brobasino;
 				TargetAttributes = {
@@ -299,6 +373,18 @@
 								enabled = 1;
 							};
 						};
+					};
+					F54A88651E21837A006CEDFA = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = PE9VXC3HPB;
+						ProvisioningStyle = Automatic;
+						TestTargetID = EC106B1D1CF3D806001F59D6;
+					};
+					F54A88731E2186B6006CEDFA = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = PE9VXC3HPB;
+						ProvisioningStyle = Automatic;
+						TestTargetID = EC106B1D1CF3D806001F59D6;
 					};
 				};
 			};
@@ -316,6 +402,8 @@
 			projectRoot = "";
 			targets = (
 				EC106B1D1CF3D806001F59D6 /* Trackit */,
+				F54A88651E21837A006CEDFA /* TrackitUITests */,
+				F54A88731E2186B6006CEDFA /* TrackitUITests-1 */,
 			);
 		};
 /* End PBXProject section */
@@ -328,6 +416,20 @@
 				EC106B2C1CF3D806001F59D6 /* LaunchScreen.storyboard in Resources */,
 				EC106B291CF3D806001F59D6 /* Assets.xcassets in Resources */,
 				EC106B271CF3D806001F59D6 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F54A88641E21837A006CEDFA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F54A88721E2186B6006CEDFA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -427,6 +529,7 @@
 				F50933751E0DB95B009F7B8D /* StaticRadiusGeofence+CoreDataClass.swift in Sources */,
 				F5FA906F1DED17B500AA4E02 /* Device+CoreDataClass.swift in Sources */,
 				F5642B621E0A05210049E986 /* RouteEditViewController.swift in Sources */,
+				F54A887F1E21BD08006CEDFA /* DeviceSearchViewController.swift in Sources */,
 				F509337C1E0DB95B009F7B8D /* Geofence+CoreDataProperties.swift in Sources */,
 				EC30AB371CF66DB800394C33 /* ImageViewController.swift in Sources */,
 				F5D908D31DEA1C2300C576A5 /* ConnectionTableViewController.swift in Sources */,
@@ -445,7 +548,34 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F54A88621E21837A006CEDFA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F54A88701E2186B6006CEDFA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F54A886C1E21837A006CEDFA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EC106B1D1CF3D806001F59D6 /* Trackit */;
+			targetProxy = F54A886B1E21837A006CEDFA /* PBXContainerItemProxy */;
+		};
+		F54A887A1E2186B6006CEDFA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EC106B1D1CF3D806001F59D6 /* Trackit */;
+			targetProxy = F54A88791E2186B6006CEDFA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		EC106B251CF3D806001F59D6 /* Main.storyboard */ = {
@@ -596,6 +726,68 @@
 			};
 			name = Release;
 		};
+		F54A886E1E21837A006CEDFA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				DEVELOPMENT_TEAM = PE9VXC3HPB;
+				INFOPLIST_FILE = TrackitUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = brobasino.TrackitUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = Trackit;
+			};
+			name = Debug;
+		};
+		F54A886F1E21837A006CEDFA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				DEVELOPMENT_TEAM = PE9VXC3HPB;
+				INFOPLIST_FILE = TrackitUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = brobasino.TrackitUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = Trackit;
+			};
+			name = Release;
+		};
+		F54A887C1E2186B6006CEDFA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				DEVELOPMENT_TEAM = PE9VXC3HPB;
+				INFOPLIST_FILE = "TrackitUITests-1/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "brobasino.TrackitUITests-1";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = Trackit;
+			};
+			name = Debug;
+		};
+		F54A887D1E2186B6006CEDFA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				DEVELOPMENT_TEAM = PE9VXC3HPB;
+				INFOPLIST_FILE = "TrackitUITests-1/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "brobasino.TrackitUITests-1";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = Trackit;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -616,6 +808,22 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		F54A886D1E21837A006CEDFA /* Build configuration list for PBXNativeTarget "TrackitUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F54A886E1E21837A006CEDFA /* Debug */,
+				F54A886F1E21837A006CEDFA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		F54A887B1E2186B6006CEDFA /* Build configuration list for PBXNativeTarget "TrackitUITests-1" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F54A887C1E2186B6006CEDFA /* Debug */,
+				F54A887D1E2186B6006CEDFA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 

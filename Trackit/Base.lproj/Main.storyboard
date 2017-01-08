@@ -646,6 +646,34 @@
             </objects>
             <point key="canvasLocation" x="4033" y="4977"/>
         </scene>
+        <!--Device Search View Controller-->
+        <scene sceneID="OdZ-kD-dlN">
+            <objects>
+                <viewController id="Fns-cb-QHZ" customClass="DeviceSearchViewController" customModule="Trackit" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="aQM-18-w5k"/>
+                        <viewControllerLayoutGuide type="bottom" id="LSH-Cx-wmy"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="tQw-9D-Lk5">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O99-Tb-5W0">
+                                <rect key="frame" x="16" y="126" width="48" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Cancel"/>
+                                <connections>
+                                    <action selector="searcj:" destination="Fns-cb-QHZ" eventType="touchUpInside" id="5vh-SM-vaJ"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AVF-VD-p1S" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4953" y="6505"/>
+        </scene>
         <!--Device Table View Controller-->
         <scene sceneID="Zgt-xg-UsE">
             <objects>
@@ -659,11 +687,18 @@
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <items>
                                 <navigationItem title="Devices" id="cun-RL-n7V">
-                                    <barButtonItem key="rightBarButtonItem" systemItem="add" id="TrE-nz-hmP">
-                                        <connections>
-                                            <segue destination="ZhJ-aj-84q" kind="show" identifier="New Device" id="nhu-oz-3ep"/>
-                                        </connections>
-                                    </barButtonItem>
+                                    <rightBarButtonItems>
+                                        <barButtonItem systemItem="add" id="TrE-nz-hmP">
+                                            <connections>
+                                                <segue destination="ZhJ-aj-84q" kind="show" identifier="New Device" id="nhu-oz-3ep"/>
+                                            </connections>
+                                        </barButtonItem>
+                                        <barButtonItem image="gps" id="OiB-MV-UsQ">
+                                            <connections>
+                                                <segue destination="Fns-cb-QHZ" kind="show" identifier="Search for Device" id="mcb-ww-aVU"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </rightBarButtonItems>
                                 </navigationItem>
                             </items>
                         </navigationBar>
@@ -788,7 +823,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qp9-kt-J0o" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4954.3999999999996" y="5712.5937031484264"/>
+            <point key="canvasLocation" x="4953" y="5713"/>
         </scene>
         <!--Routes-->
         <scene sceneID="K1S-BG-R90">
@@ -1239,6 +1274,7 @@
     <resources>
         <image name="Menu" width="22" height="22"/>
         <image name="full battery" width="24" height="24"/>
+        <image name="gps" width="32" height="32"/>
         <image name="location" width="26" height="26"/>
     </resources>
     <inferredMetricsTieBreakers>

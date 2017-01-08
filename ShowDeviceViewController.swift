@@ -59,9 +59,10 @@ class ShowDeviceViewController: UIViewController, UIPickerViewDelegate, UIPicker
             device.color = selectedColor
         }
         else {
-            if let device = NSEntityDescription.insertNewObject(forEntityName: "Device", into: self.coreDataContainer!) as? Device {
-                device.name = self.name!.text
-                self.device = device
+            if let newDevice = NSEntityDescription.insertNewObject(forEntityName: "Device", into: self.coreDataContainer!) as? Device {
+                newDevice.name = self.name!.text
+                newDevice.color = selectedColor
+                device = newDevice
             }
         }
         (UIApplication.shared.delegate as! AppDelegate).saveContext(context: self.coreDataContainer)

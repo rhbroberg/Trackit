@@ -94,21 +94,6 @@ class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPrese
             } else {
                 deviceName = "dummy"
             }
-//            
-//                if location.device == nil {
-//                    print("bootsrapping 1 time")
-//                    if let device = (UIApplication.shared.delegate as! AppDelegate).mqListener.deviceFromTopic(topic: "rhb/f/l") {
-//                        print("fixed location")
-//                        location.device = device
-//                        deviceName = (device.name)!
-//                    } else {
-//                        deviceName = "dummy"
-//                    }
-//                }
-//                else {
-//                    deviceName = "dummy"
-//                }
-//            }
 
             if renderedRoute.devicesMap[deviceName] == nil {
                 renderedRoute.devicesMap[deviceName] = RenderableDevice(device: location.device!)
