@@ -47,6 +47,8 @@
 		F5D908D31DEA1C2300C576A5 /* ConnectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D908D21DEA1C2300C576A5 /* ConnectionTableViewController.swift */; };
 		F5D908D51DEA21F500C576A5 /* AccountTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D908D41DEA21F500C576A5 /* AccountTableViewController.swift */; };
 		F5D909151DED0D7600C576A5 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F5D909131DED0D7600C576A5 /* Model.xcdatamodeld */; };
+		F5E15C851E22760A009236EB /* UUIDs.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E15C841E22760A009236EB /* UUIDs.swift */; };
+		F5E15C871E2309F9009236EB /* BLEConfigurationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E15C861E2309F9009236EB /* BLEConfigurationManager.swift */; };
 		F5F8FA191E14980C00063B8A /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5F8FA181E14980C00063B8A /* SettingsTableViewController.swift */; };
 		F5F8FA1B1E1571C900063B8A /* MQTTListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5F8FA1A1E1571C900063B8A /* MQTTListener.swift */; };
 		F5FA906D1DED17B500AA4E02 /* Route+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5FA90671DED17B500AA4E02 /* Route+CoreDataClass.swift */; };
@@ -126,6 +128,8 @@
 		F5D908D21DEA1C2300C576A5 /* ConnectionTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionTableViewController.swift; sourceTree = "<group>"; };
 		F5D908D41DEA21F500C576A5 /* AccountTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountTableViewController.swift; sourceTree = "<group>"; };
 		F5D909141DED0D7600C576A5 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		F5E15C841E22760A009236EB /* UUIDs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UUIDs.swift; sourceTree = "<group>"; };
+		F5E15C861E2309F9009236EB /* BLEConfigurationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEConfigurationManager.swift; sourceTree = "<group>"; };
 		F5F8FA181E14980C00063B8A /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsTableViewController.swift; path = Trackit/SettingsTableViewController.swift; sourceTree = "<group>"; };
 		F5F8FA1A1E1571C900063B8A /* MQTTListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MQTTListener.swift; sourceTree = "<group>"; };
 		F5FA90671DED17B500AA4E02 /* Route+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Route+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -211,6 +215,7 @@
 				F5D908D11DEA1BEB00C576A5 /* Settings */,
 				F5D908D01DE9180000C576A5 /* SWRevealViewController */,
 				EC106B251CF3D806001F59D6 /* Main.storyboard */,
+				F5E15C861E2309F9009236EB /* BLEConfigurationManager.swift */,
 				F5C55BD81E198BCE00F97C82 /* MapSettingsViewController.swift */,
 				F5F8FA1A1E1571C900063B8A /* MQTTListener.swift */,
 				F50933611E0D722F009F7B8D /* EditGeofenceViewController.swift */,
@@ -224,6 +229,7 @@
 				F5B2A7231DF242BC006DA802 /* RouteTableViewController.swift */,
 				F5B35BF31DF499010014DB32 /* RouteTableViewCell.swift */,
 				F5642B611E0A05210049E986 /* RouteEditViewController.swift */,
+				F5E15C841E22760A009236EB /* UUIDs.swift */,
 				EC106B331CF3D812001F59D6 /* Supporting Files */,
 			);
 			path = Trackit;
@@ -507,6 +513,7 @@
 				F5D908CF1DE917F800C576A5 /* SWRevealViewController.m in Sources */,
 				EC106B241CF3D806001F59D6 /* LiveMapViewController.swift in Sources */,
 				F50933741E0DB95B009F7B8D /* PolyGeofence+CoreDataProperties.swift in Sources */,
+				F5E15C871E2309F9009236EB /* BLEConfigurationManager.swift in Sources */,
 				EC106B371CF3DA46001F59D6 /* MKGPX.swift in Sources */,
 				F5FA90711DED17B500AA4E02 /* Location+CoreDataClass.swift in Sources */,
 				F50933661E0D8628009F7B8D /* GeofenceTableViewCell.swift in Sources */,
@@ -526,6 +533,7 @@
 				F5B2A7241DF242BC006DA802 /* RouteTableViewController.swift in Sources */,
 				F5B35BF21DF481DF0014DB32 /* CoreDataTableViewController.swift in Sources */,
 				F5B35BF41DF499010014DB32 /* RouteTableViewCell.swift in Sources */,
+				F5E15C851E22760A009236EB /* UUIDs.swift in Sources */,
 				F50933751E0DB95B009F7B8D /* StaticRadiusGeofence+CoreDataClass.swift in Sources */,
 				F5FA906F1DED17B500AA4E02 /* Device+CoreDataClass.swift in Sources */,
 				F5642B621E0A05210049E986 /* RouteEditViewController.swift in Sources */,
@@ -816,6 +824,7 @@
 				F54A886F1E21837A006CEDFA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F54A887B1E2186B6006CEDFA /* Build configuration list for PBXNativeTarget "TrackitUITests-1" */ = {
 			isa = XCConfigurationList;
@@ -824,6 +833,7 @@
 				F54A887D1E2186B6006CEDFA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
