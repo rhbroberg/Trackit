@@ -50,7 +50,6 @@ class bleStringCharacteristic: BLECharacteristic {
     override func parse() {
         if let data = characteristic.value {
             let s = String(bytes: data, encoding: String.Encoding.utf8)
-            print("string version of value is \(s)")
             readHandler?(s!)
         }
     }
@@ -65,7 +64,6 @@ class BLEService : UUIDBase {
         super.init()
     }
 
-
     // turn me into a template on type of ble.*Characteristic
     func registerCharacteristic(characteristic : CBCharacteristic, storageType: bleConfiguration.StorageImplementation) {
         switch storageType {
@@ -73,7 +71,9 @@ class BLEService : UUIDBase {
             characteristics[characteristic.uuid] = bleStringCharacteristic(characteristic: characteristic)
         case .int16:
             characteristics[characteristic.uuid] = bleIntCharacteristic(characteristic: characteristic)
-        default: break
+        default:
+            print("*** not registering uuid \(characteristic.uuid) - no support yet")
+            break
         }
     }
 
@@ -99,14 +99,13 @@ class BLEDevice : UUIDBase {
         for service in services {
             for characteristic in service.value.characteristics {
                 if characteristic.key == uuid {
-                    print("found match for \(uuid) in \(characteristic)")
                     return characteristic.value
                 }
             }
         }
         return nil
     }
-    
+
     init(peripheral: CBPeripheral?, delegate: CBPeripheralDelegate) {
         self.peripheral = peripheral
         peripheral!.delegate = delegate
@@ -151,22 +150,44 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
         byUUID = [:]
         properties = [:]
 
-        // non-global queue:
-        // http://stackoverflow.com/questions/38390270/swift-choose-queue-for-bluetooth-central-manager
         super.init()
 
         _ = registerConfig(name: "gsm.proxyIP", uuidHex: uuids.proxyIP_uuid, size: 32, storageType: .string)
         _ = registerConfig(name: "gsm.apn", uuidHex: uuids.apn_uuid, size: 32, storageType: .string)
         _ = registerConfig(name: "gsm.proxyPort", uuidHex: uuids.proxyPort_uuid, size: 32, storageType: .int64)
+        
+        _ = registerConfig(name: "mqtt.key", uuidHex: uuids.aioKey_uuid, size: 32, storageType: .string)
+        _ = registerConfig(name: "mqtt.server", uuidHex: uuids.aioServer_uuid, size: 32, storageType: .string)
+        _ = registerConfig(name: "mqtt.username", uuidHex: uuids.aioUsername_uuid, size: 32, storageType: .string)
+        _ = registerConfig(name: "mqtt.port", uuidHex: uuids.aioPort_uuid, size: 32, storageType: .int64)
+        
+        _ = registerConfig(name: "sim.IMSI", uuidHex: uuids.simIMSI_uuid, size: 32, storageType: .string)
+        _ = registerConfig(name: "sim.IMEI", uuidHex: uuids.simIMEI_uuid, size: 32, storageType: .string)
+        _ = registerConfig(name: "sim.ICCI", uuidHex: uuids.simICCI_uuid, size: 32, storageType: .string)
+        
+        _ = registerConfig(name: "post.delay", uuidHex: uuids.gpsDelay_uuid, size: 32, storageType: .int64)
 
+        _ = registerConfig(name: "cell.arfcn", uuidHex: uuids.arfcn_uuid, size: 32, storageType: .int32)
+        _ = registerConfig(name: "cell.bsic", uuidHex: uuids.bsic_uuid, size: 32, storageType: .int16)
+        _ = registerConfig(name: "cell.rxlev", uuidHex: uuids.rxlev_uuid, size: 32, storageType: .int16)
+        _ = registerConfig(name: "cell.towerid", uuidHex: uuids.towerId_uuid, size: 32, storageType: .string)
+        
+        _ = registerConfig(name: "version.name", uuidHex: uuids.name_uuid, size: 32, storageType: .string)
+        _ = registerConfig(name: "version.version", uuidHex: uuids.version_uuid, size: 32, storageType: .string)
+        _ = registerConfig(name: "version.firmware", uuidHex: uuids.firmware_uuid, size: 32, storageType: .string)
+        
+        _ = registerConfig(name: "motion.delay", uuidHex: uuids.motionDelay_uuid, size: 32, storageType: .int64)
+
+        // non-global queue:
+        // http://stackoverflow.com/questions/38390270/swift-choose-queue-for-bluetooth-central-manager
         cbManager = CBCentralManager(delegate: self, queue: nil)
     }
 
     func readStringCharacteristic(name : String, handler: @escaping (_ value: String) -> Void) -> Bool {
         if let thisCharacteristic = properties[name] {
             if let BLECharacteristic = foundDevice?.findCharacteristic(uuid: thisCharacteristic.uuid) as? bleStringCharacteristic {
-                foundDevice?.peripheral?.readValue(for: BLECharacteristic.characteristic)
                 BLECharacteristic.readHandler = handler
+                foundDevice?.peripheral?.readValue(for: BLECharacteristic.characteristic)
                 return true
             }
         }
@@ -176,8 +197,8 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
     func readInt16Characteristic(name : String, handler: @escaping (_ value: UInt16) -> Void) -> Bool {
         if let thisCharacteristic = properties[name] {
             if let BLECharacteristic = foundDevice?.findCharacteristic(uuid: thisCharacteristic.uuid) as? bleIntCharacteristic {
-                foundDevice?.peripheral?.readValue(for: BLECharacteristic.characteristic)
                 BLECharacteristic.readHandler = handler
+                foundDevice?.peripheral?.readValue(for: BLECharacteristic.characteristic)
                 return true
             }
         }
@@ -223,31 +244,27 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
             let thisService = service as CBService
             
             foundDevice?.registerService(service: thisService)
-            print("discovering characteristics now for \(thisService)")
+//            print("discovering characteristics now for \(thisService)")
             peripheral.discoverCharacteristics(nil, for: thisService)
         }
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        print("discovered characteristics")
-        for characteristic in service.characteristics! {
-            let thisCharacteristic = characteristic as CBCharacteristic
-            
-            if let serviceTree = foundDevice?.findService(service: service) {
+        if let serviceTree = foundDevice?.findService(service: service) {
+            for characteristic in service.characteristics! {
+                let thisCharacteristic = characteristic as CBCharacteristic
+                
                 if let which = byUUID[thisCharacteristic.uuid] {
                     serviceTree.registerCharacteristic(characteristic: thisCharacteristic, storageType: (properties[which]!.storageType))
                 }
+                
+                self.foundDevice?.peripheral?.setNotifyValue(true, for: thisCharacteristic)
             }
-
-            print("looking at characteristic \(thisCharacteristic)")
-            //            let junk = CBUUID(string: "a495ff21-c5b1-4b44-b512-1370f02d74de")
-            //            if thisCharacteristic.uuid == junk {
-            self.foundDevice?.peripheral?.setNotifyValue(true, for: thisCharacteristic)
-            //            }
-            // peripheral.readValue(for: characteristic)
+        } else {
+            print("**** danger will robinson: can't find service \(service.uuid)")
         }
     }
-    
+
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         print("disconnected from peripheral")
     }

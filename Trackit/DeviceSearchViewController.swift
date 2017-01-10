@@ -10,11 +10,84 @@ import UIKit
 
 class DeviceSearchViewController: UIViewController {
 
+    @IBOutlet weak var server: UILabel!
+    @IBOutlet weak var imsi: UILabel!
+    @IBOutlet weak var icci: UILabel!
+    @IBOutlet weak var imei: UILabel!
+    
+    
+    @IBOutlet weak var rxlevel: UILabel!
+    @IBOutlet weak var bsic: UILabel!
+    @IBOutlet weak var towerid: UILabel!
+    @IBOutlet weak var name: UILabel!
+    @IBOutlet weak var version: UILabel!
+    @IBOutlet weak var firmware: UILabel!
+    
     @IBAction func peek(_ sender: Any) {
         print("peeking")
-        bleManager!.readStringCharacteristic(name: "gsm.proxyIP") { (value) -> Void  in
-            print("this is my closure, i see \(value)")
+        _ = bleManager!.readStringCharacteristic(name: "mqtt.server") { (value) -> Void  in
+            print("server \(value)")
+            DispatchQueue.main.async {
+                self.server!.text = value
+            }
         }
+
+        _ = bleManager!.readStringCharacteristic(name: "sim.IMSI") { (value) -> Void  in
+            print("IMSI \(value)")
+            DispatchQueue.main.async {
+                self.imsi!.text = value
+            }
+        }
+        _ = bleManager!.readStringCharacteristic(name: "sim.IMEI") { (value) -> Void  in
+            print("IMEI \(value)")
+            DispatchQueue.main.async {
+                self.imei!.text = value
+            }
+        }
+        _ = bleManager!.readStringCharacteristic(name: "sim.ICCI") { (value) -> Void  in
+            print("ICCI \(value)")
+            DispatchQueue.main.async {
+                self.icci!.text = value
+            }
+        }
+
+        _ = bleManager!.readInt16Characteristic(name: "cell.rxlev") { (value) -> Void in
+            print("rxlevel is \(value)")
+            DispatchQueue.main.async {
+                self.rxlevel!.text = "\(value)"
+            }
+        }
+
+        _ = bleManager!.readInt16Characteristic(name: "cell.bsic") { (value) -> Void in
+            print("bsic is \(value)")
+            DispatchQueue.main.async {
+                self.bsic!.text = "\(value)"
+            }
+        }
+
+        _ = bleManager!.readStringCharacteristic(name: "cell.towerid") { (value) -> Void in
+            print("towerid is \(value)")
+            DispatchQueue.main.async {
+                self.towerid!.text = "\(value)"
+            }
+        }
+
+        _ = bleManager!.readStringCharacteristic(name: "version.name") { (value) -> Void in
+            DispatchQueue.main.async {
+                self.name!.text = "\(value)"
+            }
+        }
+        _ = bleManager!.readStringCharacteristic(name: "version.version") { (value) -> Void in
+            DispatchQueue.main.async {
+                self.version!.text = "\(value)"
+            }
+        }
+        _ = bleManager!.readStringCharacteristic(name: "version.firmware") { (value) -> Void in
+            DispatchQueue.main.async {
+                self.firmware!.text = "\(value)"
+            }
+        }
+
     }
 
     override func viewDidLoad() {
