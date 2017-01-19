@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DeviceSearchViewController: UIViewController {
+class FoundDeviceViewController: UIViewController {
 
     @IBOutlet weak var server: UILabel!
     @IBOutlet weak var imsi: UILabel!
@@ -90,20 +90,11 @@ class DeviceSearchViewController: UIViewController {
 
     }
 
+    var bleManager : BLEConfigurationManager?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        bleManager = BLEConfigurationManager()
-        // Do any additional setup after loading the view.
-    }
-    var bleManager : BLEConfigurationManager?
 
-    @IBAction func searcj(_ sender: Any) {
-        print("closing?")
-        if bleManager?.foundDevice?.peripheral != nil {
-            bleManager?.cbManager?.cancelPeripheralConnection((bleManager?.foundDevice!.peripheral!)!)
-            bleManager?.foundDevice = nil
-        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -112,7 +103,9 @@ class DeviceSearchViewController: UIViewController {
     }
 
     override func viewWillDisappear(_ animated: Bool) {
+        bleManager?.disconnectFromPeripheral()
     }
+
     /*
     // MARK: - Navigation
 
