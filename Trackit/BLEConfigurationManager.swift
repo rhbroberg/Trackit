@@ -9,140 +9,30 @@
 import UIKit
 import CoreBluetooth
 
-class UUIDBase {
-    
-}
-
-class BLECharacteristic : UUIDBase {
-    let characteristic : CBCharacteristic
-    
-    init(characteristic : CBCharacteristic)
-    {
-        self.characteristic = characteristic
-        super.init()
-    }
-
-    func parse() {
-    }
-}
-
-class bleIntCharacteristic : BLECharacteristic {
-    var readHandler: ((_ value : UInt16) -> Void)?
-
-    override func parse() {
-        if let data = characteristic.value {
-            var bytes = Array(repeating: 0 as UInt8, count:data.count) //MemoryLayout.size(ofValue: count)/MemoryLayout<UInt8>.size)
-
-            var myint : UInt16 = 0
-            if data.count > 1 {
-                data.copyBytes(to: &bytes, count:data.count)
-                let data16 = bytes.map { UInt16($0) }
-                myint = 256 * data16[1] + data16[0]
-                readHandler?(myint)
-            }
-        }
-    }
-}
-
-class bleStringCharacteristic: BLECharacteristic {
-    var readHandler: ((_ value : String) -> Void)?
-
-    override func parse() {
-        if let data = characteristic.value {
-            let s = String(bytes: data, encoding: String.Encoding.utf8)
-            readHandler?(s!)
-        }
-    }
-}
-
-class BLEService : UUIDBase {
-    let service : CBService
-    var characteristics : [CBUUID : BLECharacteristic] = [:]
-    
-    init(service: CBService) {
-        self.service = service
-        super.init()
-    }
-
-    // turn me into a template on type of ble.*Characteristic
-    func registerCharacteristic(characteristic : CBCharacteristic, storageType: bleConfiguration.StorageImplementation) {
-        switch storageType {
-        case .string:
-            characteristics[characteristic.uuid] = bleStringCharacteristic(characteristic: characteristic)
-        case .int16:
-            characteristics[characteristic.uuid] = bleIntCharacteristic(characteristic: characteristic)
-        default:
-            print("*** not registering uuid \(characteristic.uuid) - no support yet")
-            break
-        }
-    }
-
-    func findCharacteristic(which: CBCharacteristic) -> BLECharacteristic? {
-        return characteristics[which.uuid]
-    }
-}
-
-class BLEDevice : UUIDBase {
-    var peripheral: CBPeripheral?
-    var services : [CBUUID : BLEService] = [:]
-    
-    func registerService(service: CBService) {
-        let newService = BLEService(service: service)
-        services[service.uuid] = newService
-    }
-    
-    func findService(service: CBService) ->BLEService? {
-        return services[service.uuid]
-    }
-    
-    func findCharacteristic(uuid: CBUUID) -> BLECharacteristic? {
-        for service in services {
-            for characteristic in service.value.characteristics {
-                if characteristic.key == uuid {
-                    return characteristic.value
-                }
-            }
-        }
-        return nil
-    }
-
-    init(peripheral: CBPeripheral?, delegate: CBPeripheralDelegate) {
-        self.peripheral = peripheral
-        peripheral!.delegate = delegate
-        super.init()
-    }
-}
-
-struct bleConfiguration {
-    let uuid : CBUUID
-    let size : Int
-    let storageType : StorageImplementation
-    var value : String?
-
-    enum StorageImplementation {
-        case int8
-        case int16
-        case int32
-        case int64
-        case string
-    }
+struct ExpiringPeripheral {
+    let peripheral : CBPeripheral
+    var lastSeen : Date
 }
 
 class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
-    var foundDevice : BLEDevice?
+    private(set) var selectedDevice : BLEDevice?
+
+    var selectedPeripheral : CBPeripheral? {
+        willSet {
+            if newValue != nil {
+                stopScanning()
+                cbManager?.connect(newValue!, options: nil)
+                selectedDevice = BLEDevice(peripheral: newValue, delegate: self)
+            }
+        }
+    }
+
+    var expirationTimer : Timer?
+    var peripherals : [ExpiringPeripheral] = []
     var byUUID : [CBUUID : String]
     var properties : [String : bleConfiguration]
-
     var cbManager: CBCentralManager?
     var delegate : BLEConfigurationManagerDelegate?
-
-    func registerConfig(name: String, uuidHex: [UInt8], size: Int, storageType: bleConfiguration.StorageImplementation) -> bleConfiguration {
-        let uuid = uuids.convert(from: uuidHex)
-        properties[name] = bleConfiguration(uuid: uuid, size: size, storageType: storageType, value: nil)
-        byUUID[uuid] = name
-
-        return properties[name]!
-    }
 
     // keep track of outstanding services and characteristics in flight, so we know when we're fully initialized
     // alternatively services could be retrieved lazy-ly
@@ -183,11 +73,52 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
         cbManager = CBCentralManager(delegate: self, queue: nil)
     }
 
+    deinit {
+        print("deinit for BLEConfigurationManager")
+        stopScanning()
+    }
+
+    func startScanning() {
+        if cbManager?.state == CBManagerState.poweredOn {
+            peripherals = []
+            cbManager?.scanForPeripherals(withServices: nil, options: nil)
+            
+            if expirationTimer == nil {
+                expirationTimer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { _ in
+                    self.reapExpiredAndScanAgain()
+                }
+                )
+            }
+        }
+    }
+
+    func stopScanning() {
+        expirationTimer?.invalidate()
+        expirationTimer = nil
+        cbManager?.stopScan()
+    }
+    
+    func disconnectFromPeripheral() {
+        if selectedDevice?.peripheral != nil {
+            cbManager?.cancelPeripheralConnection(selectedDevice!.peripheral!)
+            selectedDevice = nil
+        }
+        startScanning()
+    }
+
+    func registerConfig(name: String, uuidHex: [UInt8], size: Int, storageType: bleConfiguration.StorageImplementation) -> bleConfiguration {
+        let uuid = uuids.convert(from: uuidHex)
+        properties[name] = bleConfiguration(uuid: uuid, size: size, storageType: storageType, value: nil)
+        byUUID[uuid] = name
+        
+        return properties[name]!
+    }
+    
     func readStringCharacteristic(name : String, handler: @escaping (_ value: String) -> Void) -> Bool {
         if let thisCharacteristic = properties[name] {
-            if let BLECharacteristic = foundDevice?.findCharacteristic(uuid: thisCharacteristic.uuid) as? bleStringCharacteristic {
+            if let BLECharacteristic = selectedDevice?.findCharacteristic(uuid: thisCharacteristic.uuid) as? bleStringCharacteristic {
                 BLECharacteristic.readHandler = handler
-                foundDevice?.peripheral?.readValue(for: BLECharacteristic.characteristic)
+                selectedDevice?.peripheral?.readValue(for: BLECharacteristic.characteristic)
                 return true
             }
         }
@@ -196,42 +127,75 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
 
     func readInt16Characteristic(name : String, handler: @escaping (_ value: UInt16) -> Void) -> Bool {
         if let thisCharacteristic = properties[name] {
-            if let BLECharacteristic = foundDevice?.findCharacteristic(uuid: thisCharacteristic.uuid) as? bleIntCharacteristic {
+            if let BLECharacteristic = selectedDevice?.findCharacteristic(uuid: thisCharacteristic.uuid) as? bleIntCharacteristic {
                 BLECharacteristic.readHandler = handler
-                foundDevice?.peripheral?.readValue(for: BLECharacteristic.characteristic)
+                selectedDevice?.peripheral?.readValue(for: BLECharacteristic.characteristic)
                 return true
             }
         }
         return false
     }
+    
+    func reapExpiredAndScanAgain() {
+        for recentPeripheral in peripherals {
+            let howOld = recentPeripheral.lastSeen.timeIntervalSinceNow
+            print("peripheral \(recentPeripheral) is \(howOld)")
+            if howOld < -10 {
+                print("peripheral \(recentPeripheral) is expiring")
+                if let existing = peripherals.index(where: { $0.peripheral.name == recentPeripheral.peripheral.name }) {
+                    peripherals.remove(at: existing)
+                    delegate?.deviceDisappeared(peripheral: recentPeripheral.peripheral)
+                }
+            }
+        }
+        cbManager?.scanForPeripherals(withServices: nil, options: nil)
+    }
 
+    func addOrUpdateDevice(peripheral: CBPeripheral) {
+        let now = Date()
+        if let existing = peripherals.index(where: { $0.peripheral.name == peripheral.name })
+        {
+            print("updating timestamp on \(peripherals[existing])")
+            peripherals[existing].lastSeen = now
+        }
+        else {
+            print("adding new \(peripheral)")
+            peripherals.append(ExpiringPeripheral(peripheral: peripheral, lastSeen: Date()))
+            peripherals.sort {
+                guard let left = $0.peripheral.name, let right = $1.peripheral.name else {
+                    return false
+                }
+                return left < right
+            }
+        }
+    }
+    
     // MARK: - CBCentralManagerDelegate
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         print("ble state update: \(central.state)")
-        
+
         if central.state == CBManagerState.poweredOn {
             print("searching...")
-            central.scanForPeripherals(withServices: nil, options: nil)
+            startScanning()
         } else {
             print("ble not available (yet?)")
         }
     }
-    
+
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        let device = (advertisementData as NSDictionary).object(forKey: CBAdvertisementDataLocalNameKey) as? NSString
-        
-        if device != nil {
-            print("peripheral discovered: \(device!)")
-        }
-        if device?.contains("mytracker") == true {
-            print("found mytracker")
-            cbManager?.stopScan()
-            self.foundDevice = BLEDevice(peripheral: peripheral, delegate: self)
-            
-            cbManager?.connect(peripheral, options: nil)
+        print("central manager did discover peripheral...")
+        print("advertisements are: \(advertisementData)")
+
+        if let device = (advertisementData as NSDictionary).object(forKey: CBAdvertisementDataLocalNameKey) as? NSString {
+            print("peripheral discovered: \(device)")
+
+            if device.contains("mytracker-") == true {
+                addOrUpdateDevice(peripheral: peripheral)
+                delegate?.deviceDiscovered(peripheral: peripheral)
+            }
         }
     }
-    
+
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("connected to peripheral \(peripheral)")
         peripheral.discoverServices(nil)
@@ -243,14 +207,13 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
         for service in peripheral.services! {
             let thisService = service as CBService
             
-            foundDevice?.registerService(service: thisService)
-//            print("discovering characteristics now for \(thisService)")
+            selectedDevice?.registerService(service: thisService)
             peripheral.discoverCharacteristics(nil, for: thisService)
         }
     }
-    
+
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        if let serviceTree = foundDevice?.findService(service: service) {
+        if let serviceTree = selectedDevice?.findService(service: service) {
             for characteristic in service.characteristics! {
                 let thisCharacteristic = characteristic as CBCharacteristic
                 
@@ -258,7 +221,7 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
                     serviceTree.registerCharacteristic(characteristic: thisCharacteristic, storageType: (properties[which]!.storageType))
                 }
                 
-                self.foundDevice?.peripheral?.setNotifyValue(true, for: thisCharacteristic)
+                self.selectedDevice?.peripheral?.setNotifyValue(true, for: thisCharacteristic)
             }
         } else {
             print("**** danger will robinson: can't find service \(service.uuid)")
@@ -276,10 +239,11 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         print("notify: peripheral updated value: \(characteristic)")
         
-        foundDevice?.findCharacteristic(uuid: characteristic.uuid)?.parse()
+        selectedDevice?.findCharacteristic(uuid: characteristic.uuid)?.parse()
     }
 }
 
 protocol BLEConfigurationManagerDelegate : class {
-    func deviceFound()
+    func deviceDiscovered(peripheral: CBPeripheral)
+    func deviceDisappeared(peripheral: CBPeripheral)
 }
