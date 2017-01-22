@@ -7,10 +7,24 @@
     </entity>
     <entity name="Device" representedClassName="Device" syncable="YES">
         <attribute name="color" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="firmware" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="icci" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
+        <attribute name="imei" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imsi" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
-        <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Location" inverseName="device" inverseEntity="Location" syncable="YES"/>
-        <relationship name="violations" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Violation" inverseName="device" inverseEntity="Violation" syncable="YES"/>
+        <attribute name="software" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="version" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="locations" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Location" inverseName="device" inverseEntity="Location" syncable="YES"/>
+        <relationship name="violations" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Violation" inverseName="device" inverseEntity="Violation" syncable="YES"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="name"/>
+            </uniquenessConstraint>
+            <uniquenessConstraint>
+                <constraint value="imei"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <entity name="DynamicGeofence" representedClassName="DynamicGeofence" parentEntity="Geofence" syncable="YES">
         <attribute name="radius" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
@@ -60,13 +74,13 @@
     </entity>
     <elements>
         <element name="Coordinate" positionX="846" positionY="470" width="128" height="88"/>
-        <element name="Device" positionX="16" positionY="203" width="128" height="118"/>
+        <element name="Device" positionX="18" positionY="81" width="128" height="208"/>
         <element name="DynamicGeofence" positionX="619" positionY="270" width="128" height="58"/>
         <element name="Geofence" positionX="333" positionY="252" width="128" height="88"/>
         <element name="Location" positionX="187" positionY="369" width="146" height="251"/>
         <element name="PolyGeofence" positionX="621" positionY="459" width="128" height="58"/>
         <element name="Route" positionX="475" positionY="572" width="128" height="103"/>
         <element name="StaticRadiusGeofence" positionX="621" positionY="351" width="128" height="88"/>
-        <element name="Violation" positionX="-234" positionY="239" width="128" height="118"/>
+        <element name="Violation" positionX="-234" positionY="242" width="128" height="118"/>
     </elements>
 </model>

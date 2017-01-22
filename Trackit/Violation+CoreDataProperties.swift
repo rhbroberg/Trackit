@@ -2,7 +2,7 @@
 //  Violation+CoreDataProperties.swift
 //  Trackit
 //
-//  Created by Richard Broberg on 1/1/17.
+//  Created by Richard Broberg on 1/22/17.
 //  Copyright © 2017 Brobasino. All rights reserved.
 //
 
@@ -16,10 +16,10 @@ extension Violation {
         return NSFetchRequest<Violation>(entityName: "Violation");
     }
 
-    @NSManaged public var name: String?
     @NSManaged public var acknowledged: NSDate?
+    @NSManaged public var name: String?
+    @NSManaged public var device: Device?
     @NSManaged public var geofence: Geofence?
     @NSManaged public var location: Location?
-    @NSManaged public var device: Device?
 
 }

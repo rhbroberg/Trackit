@@ -2,7 +2,7 @@
 //  Device+CoreDataProperties.swift
 //  Trackit
 //
-//  Created by Richard Broberg on 1/5/17.
+//  Created by Richard Broberg on 1/22/17.
 //  Copyright © 2017 Brobasino. All rights reserved.
 //
 
@@ -16,9 +16,15 @@ extension Device {
         return NSFetchRequest<Device>(entityName: "Device");
     }
 
-    @NSManaged public var id: Int16
-    @NSManaged public var name: String?
     @NSManaged public var color: String?
+    @NSManaged public var firmware: String?
+    @NSManaged public var icci: String?
+    @NSManaged public var id: Int16
+    @NSManaged public var imei: String?
+    @NSManaged public var imsi: String?
+    @NSManaged public var name: String?
+    @NSManaged public var software: String?
+    @NSManaged public var version: String?
     @NSManaged public var locations: NSSet?
     @NSManaged public var violations: Violation?
 

@@ -2,7 +2,7 @@
 //  Location+CoreDataProperties.swift
 //  Trackit
 //
-//  Created by Richard Broberg on 1/1/17.
+//  Created by Richard Broberg on 1/22/17.
 //  Copyright © 2017 Brobasino. All rights reserved.
 //
 

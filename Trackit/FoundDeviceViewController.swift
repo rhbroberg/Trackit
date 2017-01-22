@@ -7,87 +7,107 @@
 //
 
 import UIKit
+import CoreData
+import CoreBluetooth
 
-class FoundDeviceViewController: UIViewController {
+class FoundDeviceViewController: UIViewController, BLEConfigurationManagerDelegate {
 
-    @IBOutlet weak var server: UILabel!
     @IBOutlet weak var imsi: UILabel!
     @IBOutlet weak var icci: UILabel!
     @IBOutlet weak var imei: UILabel!
     
+    @IBOutlet weak var name: UITextField!
     
-    @IBOutlet weak var rxlevel: UILabel!
-    @IBOutlet weak var bsic: UILabel!
-    @IBOutlet weak var towerid: UILabel!
-    @IBOutlet weak var name: UILabel!
+    @IBOutlet weak var software: UILabel!
     @IBOutlet weak var version: UILabel!
     @IBOutlet weak var firmware: UILabel!
     
-    @IBAction func peek(_ sender: Any) {
-        print("peeking")
-        _ = bleManager!.readStringCharacteristic(name: "mqtt.server") { (value) -> Void  in
-            print("server \(value)")
-            DispatchQueue.main.async {
-                self.server!.text = value
+    @IBOutlet weak var activity: UIActivityIndicatorView!
+    @IBAction func add(_ sender: Any) {
+        // turn on spinner?
+        print("time to add to db")
+        bleManager!.delegate = self
+        activity!.startAnimating()
+
+        self.coreDataContainer?.perform {
+            if let device = NSEntityDescription.insertNewObject(forEntityName: "Device", into: self.coreDataContainer!) as? Device {
+                device.name = self.name!.text!
+                device.software = self.software!.text
+                device.version = self.version!.text
+                device.firmware = self.firmware!.text
+                device.imei = self.imei!.text
+                device.icci = self.icci!.text
+                device.imsi = self.imsi!.text
+                device.color = "red" // as good a default as any
+                (UIApplication.shared.delegate as! AppDelegate).saveContext(context: self.coreDataContainer)
             }
         }
+        
+        if self.originalName != self.name!.text {
+            _ = bleManager!.writeStringCharacteristic(name: "app.name", value: name!.text!) { () -> Void in
+                DispatchQueue.main.async {
+                    print("remote ble name change accepted")
 
+                    _ = self.bleManager!.writeInt16Characteristic(name: "app.reboot", value: 1) { () -> Void in
+                        DispatchQueue.main.async {
+                            print("reboot command accepted, starting to scan again")
+                            self.bleManager?.startScanning()
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            print("no name change, just added - time to leave")
+            activity!.stopAnimating()
+        }
+    }
+
+    var originalName : String?
+
+    var coreDataContainer : NSManagedObjectContext? =
+        (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
+    func retrieveAllCharacteristics() {
+        print("peeking")
         _ = bleManager!.readStringCharacteristic(name: "sim.IMSI") { (value) -> Void  in
             print("IMSI \(value)")
             DispatchQueue.main.async {
                 self.imsi!.text = value
             }
         }
+        
         _ = bleManager!.readStringCharacteristic(name: "sim.IMEI") { (value) -> Void  in
             print("IMEI \(value)")
             DispatchQueue.main.async {
                 self.imei!.text = value
             }
         }
+        
         _ = bleManager!.readStringCharacteristic(name: "sim.ICCI") { (value) -> Void  in
             print("ICCI \(value)")
             DispatchQueue.main.async {
                 self.icci!.text = value
             }
         }
-
-        _ = bleManager!.readInt16Characteristic(name: "cell.rxlev") { (value) -> Void in
-            print("rxlevel is \(value)")
-            DispatchQueue.main.async {
-                self.rxlevel!.text = "\(value)"
-            }
-        }
-
-        _ = bleManager!.readInt16Characteristic(name: "cell.bsic") { (value) -> Void in
-            print("bsic is \(value)")
-            DispatchQueue.main.async {
-                self.bsic!.text = "\(value)"
-            }
-        }
-
-        _ = bleManager!.readStringCharacteristic(name: "cell.towerid") { (value) -> Void in
-            print("towerid is \(value)")
-            DispatchQueue.main.async {
-                self.towerid!.text = "\(value)"
-            }
-        }
-
+        
         _ = bleManager!.readStringCharacteristic(name: "version.name") { (value) -> Void in
             DispatchQueue.main.async {
-                self.name!.text = "\(value)"
+                self.software!.text = "\(value)"
             }
         }
+        
         _ = bleManager!.readStringCharacteristic(name: "version.version") { (value) -> Void in
             DispatchQueue.main.async {
                 self.version!.text = "\(value)"
             }
         }
+        
         _ = bleManager!.readStringCharacteristic(name: "version.firmware") { (value) -> Void in
             DispatchQueue.main.async {
                 self.firmware!.text = "\(value)"
             }
         }
-
     }
 
     var bleManager : BLEConfigurationManager?
@@ -95,6 +115,21 @@ class FoundDeviceViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        name!.text = bleManager?.selectedDevice?.peripheral?.name
+        originalName = name!.text
+
+        if (bleManager?.selectedDevice?.allServicesDiscovered())! {
+            print("looks like we already have all the data we need, strangely")
+            retrieveAllCharacteristics()
+        }
+
+        // allow any tap in view to dismiss keyboard
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(FoundDeviceViewController.handleTap))
+        self.view.addGestureRecognizer(gestureRecognizer)
+    }
+
+    func handleTap(gestureRecognizer: UIGestureRecognizer) {
+        view.endEditing(true)
     }
 
     override func didReceiveMemoryWarning() {
@@ -104,6 +139,26 @@ class FoundDeviceViewController: UIViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         bleManager?.disconnectFromPeripheral()
+    }
+
+    // MARK: BLEConfigurationManagerDelegate
+    func deviceDiscovered(peripheral: CBPeripheral) {
+        print("rediscovered \(peripheral)")
+        if peripheral.name == originalName {
+            print("and i see our old friend \(originalName) is back")
+            print("now we connect")
+            bleManager?.selectedPeripheral = peripheral
+            // now wait until connect callback
+        }
+    }
+
+    func deviceDisappeared(peripheral: CBPeripheral) {
+    }
+
+    func discoveryComplete() {
+        print("looks like service/characteristic discovery is complete!")
+        activity!.stopAnimating()
+        // leave subview now
     }
 
     /*

@@ -28,7 +28,7 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
     }
 
     var expirationTimer : Timer?
-    var peripherals : [ExpiringPeripheral] = []
+    var peripherals : [ExpiringPeripheral]
     var byUUID : [CBUUID : String]
     var properties : [String : bleConfiguration]
     var cbManager: CBCentralManager?
@@ -39,6 +39,7 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
     override init() {
         byUUID = [:]
         properties = [:]
+        peripherals = []
 
         super.init()
 
@@ -66,6 +67,11 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
         _ = registerConfig(name: "version.version", uuidHex: uuids.version_uuid, size: 32, storageType: .string)
         _ = registerConfig(name: "version.firmware", uuidHex: uuids.firmware_uuid, size: 32, storageType: .string)
         
+        _ = registerConfig(name: "app.reboot", uuidHex: uuids.reboot_uuid, size: 32, storageType: .int16)
+        _ = registerConfig(name: "app.defaults", uuidHex: uuids.defaults_uuid, size: 32, storageType: .int16)
+        _ = registerConfig(name: "app.maintainBLE", uuidHex: uuids.maintainBLE_uuid, size: 32, storageType: .int16)
+        _ = registerConfig(name: "app.name", uuidHex: uuids.bleName_uuid, size: 32, storageType: .int16)
+        
         _ = registerConfig(name: "motion.delay", uuidHex: uuids.motionDelay_uuid, size: 32, storageType: .int64)
 
         // non-global queue:
@@ -80,7 +86,6 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
 
     func startScanning() {
         if cbManager?.state == CBManagerState.poweredOn {
-            peripherals = []
             cbManager?.scanForPeripherals(withServices: nil, options: nil)
             
             if expirationTimer == nil {
@@ -125,6 +130,20 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
         return false
     }
 
+    func writeStringCharacteristic(name: String, value: String, handler: @escaping () -> Void) -> Bool {
+        if let thisCharacteristic = properties[name] {
+            if let BLECharacteristic = selectedDevice?.findCharacteristic(uuid: thisCharacteristic.uuid) as? bleIntCharacteristic {
+                let nsval = NSString(string: value)
+                let data = Data(bytes: nsval.utf8String!, count: nsval.length)
+
+                BLECharacteristic.writeHandler = handler
+                selectedDevice?.peripheral?.writeValue(data, for: BLECharacteristic.characteristic, type: CBCharacteristicWriteType.withResponse)
+                return true
+            }
+        }
+        return false
+    }
+    
     func readInt16Characteristic(name : String, handler: @escaping (_ value: UInt16) -> Void) -> Bool {
         if let thisCharacteristic = properties[name] {
             if let BLECharacteristic = selectedDevice?.findCharacteristic(uuid: thisCharacteristic.uuid) as? bleIntCharacteristic {
@@ -135,11 +154,24 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
         }
         return false
     }
+
+    func writeInt16Characteristic(name: String, value: UInt16, handler: @escaping () -> Void) -> Bool {
+        if let thisCharacteristic = properties[name] {
+            if let BLECharacteristic = selectedDevice?.findCharacteristic(uuid: thisCharacteristic.uuid) as? bleIntCharacteristic {
+                var nsval = NSInteger(value)
+                let data = Data(bytes: &nsval, count: 1)
+
+                BLECharacteristic.writeHandler = handler
+                selectedDevice?.peripheral?.writeValue(data, for: BLECharacteristic.characteristic, type: CBCharacteristicWriteType.withResponse)
+                return true
+            }
+        }
+        return false
+    }
     
     func reapExpiredAndScanAgain() {
         for recentPeripheral in peripherals {
             let howOld = recentPeripheral.lastSeen.timeIntervalSinceNow
-            print("peripheral \(recentPeripheral) is \(howOld)")
             if howOld < -10 {
                 print("peripheral \(recentPeripheral) is expiring")
                 if let existing = peripherals.index(where: { $0.peripheral.name == recentPeripheral.peripheral.name }) {
@@ -153,6 +185,7 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
 
     func addOrUpdateDevice(peripheral: CBPeripheral) {
         let now = Date()
+        
         if let existing = peripherals.index(where: { $0.peripheral.name == peripheral.name })
         {
             print("updating timestamp on \(peripherals[existing])")
@@ -160,13 +193,14 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
         }
         else {
             print("adding new \(peripheral)")
-            peripherals.append(ExpiringPeripheral(peripheral: peripheral, lastSeen: Date()))
+            peripherals.append(ExpiringPeripheral(peripheral: peripheral, lastSeen: now))
             peripherals.sort {
                 guard let left = $0.peripheral.name, let right = $1.peripheral.name else {
                     return false
                 }
                 return left < right
             }
+            delegate?.deviceDiscovered(peripheral: peripheral)
         }
     }
     
@@ -183,30 +217,32 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
     }
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        print("central manager did discover peripheral...")
-        print("advertisements are: \(advertisementData)")
+        if advertisementData["kCBAdvDataLocalName"] != nil {
+            print("name advertisements are: \(advertisementData)")
+        }
 
         if let device = (advertisementData as NSDictionary).object(forKey: CBAdvertisementDataLocalNameKey) as? NSString {
             print("peripheral discovered: \(device)")
 
             if device.contains("mytracker-") == true {
                 addOrUpdateDevice(peripheral: peripheral)
-                delegate?.deviceDiscovered(peripheral: peripheral)
             }
         }
     }
 
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("connected to peripheral \(peripheral)")
-        peripheral.discoverServices(nil)
+        peripheral.discoverServices([uuids.convert(from: uuids.gsm_service), uuids.convert(from:uuids.mqtt_service), uuids.convert(from:uuids.version_service), uuids.convert(from:uuids.sim_service), uuids.convert(from:uuids.app_service)])
     }
-    
+
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         print("services discovered - errror? is \(error)")
-        
+
+        // device must have at least 1 service to discover or it will never be marked as discovered
+        selectedDevice?.discovered = true
         for service in peripheral.services! {
             let thisService = service as CBService
-            
+
             selectedDevice?.registerService(service: thisService)
             peripheral.discoverCharacteristics(nil, for: thisService)
         }
@@ -220,8 +256,12 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
                 if let which = byUUID[thisCharacteristic.uuid] {
                     serviceTree.registerCharacteristic(characteristic: thisCharacteristic, storageType: (properties[which]!.storageType))
                 }
-                
+
                 self.selectedDevice?.peripheral?.setNotifyValue(true, for: thisCharacteristic)
+            }
+            serviceTree.discovered = true
+            if (selectedDevice?.allServicesDiscovered())! {
+                delegate?.discoveryComplete()
             }
         } else {
             print("**** danger will robinson: can't find service \(service.uuid)")
@@ -231,19 +271,26 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         print("disconnected from peripheral")
     }
-    
+
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
         print("notify: peripheral wrote value: \(characteristic)")
+        selectedDevice?.findCharacteristic(uuid: characteristic.uuid)?.writeHandler?()
     }
-    
+
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         print("notify: peripheral updated value: \(characteristic)")
         
         selectedDevice?.findCharacteristic(uuid: characteristic.uuid)?.parse()
+    }
+    
+    func peripheralDidUpdateName(_ peripheral: CBPeripheral) {
+        print("I see you have changed your name to \(peripheral.name)")
+
     }
 }
 
 protocol BLEConfigurationManagerDelegate : class {
     func deviceDiscovered(peripheral: CBPeripheral)
     func deviceDisappeared(peripheral: CBPeripheral)
+    func discoveryComplete()
 }

@@ -296,14 +296,14 @@
 			isa = PBXGroup;
 			children = (
 				F5246C541E29975F00CABAD6 /* SearchDeviceTableViewController.swift */,
-				F54A887E1E21BD08006CEDFA /* FoundDeviceViewController.swift */,
+				F5246C561E2998D400CABAD6 /* SearchDeviceTableViewCell.swift */,
 				F5F8FA181E14980C00063B8A /* SettingsTableViewController.swift */,
 				F5D908D21DEA1C2300C576A5 /* ConnectionTableViewController.swift */,
 				F5D908D41DEA21F500C576A5 /* AccountTableViewController.swift */,
+				F54A887E1E21BD08006CEDFA /* FoundDeviceViewController.swift */,
+				F54A885E1E1DDD81006CEDFA /* ShowDeviceViewController.swift */,
 				F54A885A1E1DD356006CEDFA /* DeviceTableViewController.swift */,
 				F54A885C1E1DD385006CEDFA /* DeviceTableViewCell.swift */,
-				F5246C561E2998D400CABAD6 /* SearchDeviceTableViewCell.swift */,
-				F54A885E1E1DDD81006CEDFA /* ShowDeviceViewController.swift */,
 			);
 			name = Settings;
 			path = ..;

@@ -116,7 +116,20 @@ class MQTTListener: NSObject {
                 }
             }
 
-            let device = self.deviceFromTopic(topic: message.topic)
+            var device = self.deviceFromTopic(topic: message.topic)
+            if device == nil {
+                // if this is the case, some other ios device has added the peripheral and data has been
+                // collected from it.  in this case, a dummy device needs to be added
+                // this code should move to where the location is created, where the topic name exists which can be used instead of my placeholder below
+                print("creating dummy device since i haven't seen this one before")
+                self.coreDataContainer?.performAndWait {
+                    if let unknownDevice = NSEntityDescription.insertNewObject(forEntityName: "Device", into: self.coreDataContainer!) as? Device {
+                        unknownDevice.name = "dummy"
+                        unknownDevice.color = "red" // as good a default as any
+                        device = unknownDevice
+                    }
+                }
+            }
 
             if let location = NSEntityDescription.insertNewObject(forEntityName: "Location", into: self.coreDataContainer!) as? Location
             {

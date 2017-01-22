@@ -92,7 +92,7 @@ class LiveMapViewController: UIViewController, MKMapViewDelegate, UIPopoverPrese
                 let name = device.name {
                 deviceName = name
             } else {
-                deviceName = "dummy"
+                deviceName = "mytracker-anemic"
             }
 
             if renderedRoute.devicesMap[deviceName] == nil {

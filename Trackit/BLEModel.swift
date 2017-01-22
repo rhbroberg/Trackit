@@ -15,24 +15,28 @@ class UUIDBase {
 
 class BLECharacteristic : UUIDBase {
     let characteristic : CBCharacteristic
-    
+    var discovered : Bool
+    var writeHandler: (() -> Void)?
+
     init(characteristic : CBCharacteristic)
     {
         self.characteristic = characteristic
+        self.discovered = false
         super.init()
     }
-    
+
     func parse() {
     }
 }
 
 class bleIntCharacteristic : BLECharacteristic {
     var readHandler: ((_ value : UInt16) -> Void)?
-    
+
     override func parse() {
+        discovered = true
         if let data = characteristic.value {
             var bytes = Array(repeating: 0 as UInt8, count:data.count) //MemoryLayout.size(ofValue: count)/MemoryLayout<UInt8>.size)
-            
+
             var myint : UInt16 = 0
             if data.count > 1 {
                 data.copyBytes(to: &bytes, count:data.count)
@@ -48,6 +52,7 @@ class bleStringCharacteristic: BLECharacteristic {
     var readHandler: ((_ value : String) -> Void)?
     
     override func parse() {
+        discovered = true
         if let data = characteristic.value {
             let s = String(bytes: data, encoding: String.Encoding.utf8)
             readHandler?(s!)
@@ -58,12 +63,16 @@ class bleStringCharacteristic: BLECharacteristic {
 class BLEService : UUIDBase {
     let service : CBService
     var characteristics : [CBUUID : BLECharacteristic] = [:]
-    
-    init(service: CBService) {
+    var discovered : Bool
+    weak var peripheral : CBPeripheral?
+
+    init(service: CBService, peripheral: CBPeripheral) {
         self.service = service
+        self.discovered = false
+        self.peripheral = peripheral
         super.init()
     }
-    
+
     // turn me into a template on type of ble.*Characteristic
     func registerCharacteristic(characteristic : CBCharacteristic, storageType: bleConfiguration.StorageImplementation) {
         switch storageType {
@@ -76,40 +85,59 @@ class BLEService : UUIDBase {
             break
         }
     }
-    
+
     func findCharacteristic(which: CBCharacteristic) -> BLECharacteristic? {
         return characteristics[which.uuid]
+    }
+    
+    func allCharacteristicsDiscovered() -> Bool {
+        for characteristic in characteristics {
+            if !characteristic.value.discovered {
+                return false
+            }
+        }
+        return true
     }
 }
 
 class BLEDevice : UUIDBase {
     var peripheral: CBPeripheral?
     var services : [CBUUID : BLEService] = [:]
-    
+    var discovered : Bool
+
     func registerService(service: CBService) {
-        let newService = BLEService(service: service)
+        let newService = BLEService(service: service, peripheral: peripheral!)
+        discovered = true
         services[service.uuid] = newService
     }
-    
+
     func findService(service: CBService) ->BLEService? {
         return services[service.uuid]
     }
-    
+
     func findCharacteristic(uuid: CBUUID) -> BLECharacteristic? {
         for service in services {
-            for characteristic in service.value.characteristics {
-                if characteristic.key == uuid {
-                    return characteristic.value
-                }
+            if let characteristic = service.value.characteristics[uuid] {
+                return characteristic
             }
         }
         return nil
     }
-    
+
     init(peripheral: CBPeripheral?, delegate: CBPeripheralDelegate) {
         self.peripheral = peripheral
+        self.discovered = false
         peripheral!.delegate = delegate
         super.init()
+    }
+
+    func allServicesDiscovered() -> Bool {
+        for service in services {
+            if !service.value.discovered {
+                return false
+            }
+        }
+        return discovered && true
     }
 }
 

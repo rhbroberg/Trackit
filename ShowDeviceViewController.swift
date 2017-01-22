@@ -11,14 +11,26 @@ import CoreData
 
 class ShowDeviceViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 
-    @IBOutlet weak var name: UITextField!
-    @IBOutlet weak var id: UILabel!
-    @IBOutlet weak var firmwarePresent: UILabel!
+
     @IBOutlet weak var firmwareAvailable: UILabel!
+    @IBOutlet weak var firmwarePresent: UILabel!
     
     @IBAction func updateFirmware(_ sender: Any) {
     }
+    @IBAction func defaults(_ sender: Any) {
+    }
+    @IBAction func restart(_ sender: Any) {
+    }
+    @IBAction func remove(_ sender: Any) {
+    }
+
+    
     @IBOutlet weak var colorPicker: UIPickerView!
+    @IBOutlet weak var name: UILabel!
+    @IBOutlet weak var imsi: UILabel!
+    @IBOutlet weak var imei: UILabel!
+    @IBOutlet weak var system: UILabel!
+    @IBOutlet weak var icci: UILabel!
 
     weak var delegate : editDeviceViewControllerDelegate?
     var device : Device?
@@ -32,8 +44,13 @@ class ShowDeviceViewController: UIViewController, UIPickerViewDelegate, UIPicker
 
         if let device = device,
             let color = device.color {
-            name!.text = device.name
             selectedColor = color
+            name!.text = device.name
+            imei!.text = device.imei
+            imsi!.text = device.imsi
+            icci!.text = device.icci
+            firmwarePresent!.text = device.version
+            system!.text = device.firmware
         }
         else {
             name!.text = "undefined device"
@@ -51,7 +68,7 @@ class ShowDeviceViewController: UIViewController, UIPickerViewDelegate, UIPicker
     func handleTap(gestureRecognizer: UIGestureRecognizer) {
         view.endEditing(true)
     }
-
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if let device = device {
@@ -108,6 +125,7 @@ class ShowDeviceViewController: UIViewController, UIPickerViewDelegate, UIPicker
     */
 
 }
+
 
 protocol editDeviceViewControllerDelegate : class {
     func specificDeviceChanged(device: Device)

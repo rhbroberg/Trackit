@@ -11,10 +11,11 @@ import CoreBluetooth
 
 class SearchDeviceTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, BLEConfigurationManagerDelegate {
 
-    var bleManager : BLEConfigurationManager?
-
     @IBOutlet weak var table: UITableView!
     
+    var bleManager : BLEConfigurationManager?
+    var foundDeviceController : FoundDeviceViewController?
+
     lazy var refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(handleRefresh), for: UIControlEvents.valueChanged)
@@ -44,6 +45,8 @@ class SearchDeviceTableViewController: UIViewController, UITableViewDelegate, UI
     }
 
     override func viewDidAppear(_ animated: Bool) {
+        // steal delegate back from FoundDeviceViewController
+        bleManager?.delegate = self
         bleManager?.startScanning()
         table.reloadData()
     }
@@ -58,6 +61,7 @@ class SearchDeviceTableViewController: UIViewController, UITableViewDelegate, UI
                     bleManager?.selectedPeripheral = cell.peripheral
                 }
                 foundDevice.bleManager = bleManager
+                foundDeviceController = foundDevice
             }
         }
     }
@@ -97,4 +101,8 @@ class SearchDeviceTableViewController: UIViewController, UITableViewDelegate, UI
         table.reloadData()
     }
 
+    func discoveryComplete() {
+        print("looks like service/characteristic discovery is complete!")
+        foundDeviceController?.retrieveAllCharacteristics()
+    }
 }
