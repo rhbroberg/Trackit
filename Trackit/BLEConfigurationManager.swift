@@ -73,7 +73,10 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
         _ = registerConfig(name: "app.name", uuidHex: uuids.bleName_uuid, size: 32, storageType: .int16)
         
         _ = registerConfig(name: "motion.delay", uuidHex: uuids.motionDelay_uuid, size: 32, storageType: .int64)
-
+        
+        _ = registerConfig(name: "firmware.image", uuidHex: uuids.image_uuid, size: 32, storageType: .int16)
+        _ = registerConfig(name: "firmware.verification", uuidHex: uuids.verify_uuid, size: 32, storageType: .int16)
+        
         // non-global queue:
         // http://stackoverflow.com/questions/38390270/swift-choose-queue-for-bluetooth-central-manager
         cbManager = CBCentralManager(delegate: self, queue: nil)
@@ -135,7 +138,7 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
             if let BLECharacteristic = selectedDevice?.findCharacteristic(uuid: thisCharacteristic.uuid) as? bleIntCharacteristic {
                 let nsval = NSString(string: value)
                 let data = Data(bytes: nsval.utf8String!, count: nsval.length)
-
+                
                 BLECharacteristic.writeHandler = handler
                 selectedDevice?.peripheral?.writeValue(data, for: BLECharacteristic.characteristic, type: CBCharacteristicWriteType.withResponse)
                 return true
@@ -143,6 +146,18 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
         }
         return false
     }
+    
+    func writeBytesCharacteristic(name: String, data: Data, handler: @escaping () -> Void) -> Bool {
+        if let thisCharacteristic = properties[name] {
+            if let BLECharacteristic = selectedDevice?.findCharacteristic(uuid: thisCharacteristic.uuid) as? bleIntCharacteristic {
+                BLECharacteristic.writeHandler = handler
+                selectedDevice?.peripheral?.writeValue(data, for: BLECharacteristic.characteristic, type: CBCharacteristicWriteType.withResponse)
+                return true
+            }
+        }
+        return false
+    }
+    
     
     func readInt16Characteristic(name : String, handler: @escaping (_ value: UInt16) -> Void) -> Bool {
         if let thisCharacteristic = properties[name] {
@@ -232,7 +247,7 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
 
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("connected to peripheral \(peripheral)")
-        peripheral.discoverServices([uuids.convert(from: uuids.gsm_service), uuids.convert(from:uuids.mqtt_service), uuids.convert(from:uuids.version_service), uuids.convert(from:uuids.sim_service), uuids.convert(from:uuids.app_service)])
+        peripheral.discoverServices([uuids.convert(from: uuids.gsm_service), uuids.convert(from:uuids.mqtt_service), uuids.convert(from:uuids.version_service), uuids.convert(from:uuids.sim_service), uuids.convert(from:uuids.app_service), uuids.convert(from: uuids.firmware_service)])
     }
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
@@ -273,20 +288,18 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
     }
 
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-        print("notify: peripheral wrote value: \(characteristic)")
         selectedDevice?.findCharacteristic(uuid: characteristic.uuid)?.writeHandler?()
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        print("notify: peripheral updated value: \(characteristic)")
-        
         selectedDevice?.findCharacteristic(uuid: characteristic.uuid)?.parse()
     }
-    
+
     func peripheralDidUpdateName(_ peripheral: CBPeripheral) {
         print("I see you have changed your name to \(peripheral.name)")
 
     }
+
 }
 
 protocol BLEConfigurationManagerDelegate : class {
