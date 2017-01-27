@@ -76,7 +76,8 @@ class BLEConfigurationManager : NSObject, CBCentralManagerDelegate, CBPeripheral
         
         _ = registerConfig(name: "firmware.image", uuidHex: uuids.image_uuid, size: 32, storageType: .int16)
         _ = registerConfig(name: "firmware.verification", uuidHex: uuids.verify_uuid, size: 32, storageType: .int16)
-        
+        _ = registerConfig(name: "firmware.initiate", uuidHex: uuids.initiate_uuid, size: 32, storageType: .int16)
+
         // non-global queue:
         // http://stackoverflow.com/questions/38390270/swift-choose-queue-for-bluetooth-central-manager
         cbManager = CBCentralManager(delegate: self, queue: nil)

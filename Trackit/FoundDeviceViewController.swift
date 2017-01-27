@@ -66,6 +66,8 @@ class FoundDeviceViewController: UIViewController, BLEConfigurationManagerDelega
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "verify done"), object: nil, userInfo: nil)
                 }
             }
+            // sleeping allowed, update is done
+            UIApplication.shared.isIdleTimerDisabled = false
         }
         else {
             print("cannot compute checksum, nothing to send!")
@@ -122,6 +124,9 @@ class FoundDeviceViewController: UIViewController, BLEConfigurationManagerDelega
             nc.removeObserver(hunkNotifier)
         }
 
+        // no sleeping during firmware update, please
+        UIApplication.shared.isIdleTimerDisabled = true
+
         hunkNotifier = nc.addObserver(forName: NSNotification.Name(rawValue: "hunk done"), object:nil, queue:nil, using:hunkUploaded)
 
         if let firmwareAsset = NSDataAsset(name: "firmware") {
@@ -130,7 +135,15 @@ class FoundDeviceViewController: UIViewController, BLEConfigurationManagerDelega
             print("found firmware size \(firmwareImage?.count) bytes, how to specify version?")
         }
 
-        writeHunk(which: 0)
+        // change this to use writeStringCharacteristic once complete
+        let filename = NSString(string: "post-gps_2_1_3.vxp")
+        let data = Data(bytes: filename.utf8String!, count: filename.length)
+        _ = bleManager!.writeBytesCharacteristic(name: "firmware.initiate", data: data) { () -> Void in
+            DispatchQueue.main.async {
+                print("firmware filename written")
+                self.writeHunk(which: 0)
+            }
+        }
     }
 
     @IBOutlet weak var activity: UIActivityIndicatorView!
@@ -253,6 +266,8 @@ class FoundDeviceViewController: UIViewController, BLEConfigurationManagerDelega
     override func viewWillDisappear(_ animated: Bool) {
         bleManager?.disconnectFromPeripheral()
         NotificationCenter.default.removeObserver(self)
+        // sleeping back to normal
+        UIApplication.shared.isIdleTimerDisabled = false
     }
 
     // MARK: BLEConfigurationManagerDelegate
